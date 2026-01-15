@@ -18,10 +18,19 @@ import {
   ExternalLink,
   Upload,
   Database,
-  Settings
+  Settings,
+  Calculator,
+  TrendingUp,
+  BarChart,
+  PieChart,
+  Target,
+  DollarSign,
+  Shield,
+  TrendingDown,
+  Percent
 } from "lucide-react";
 
-export default function Module1({ theme = 'dark' }) {
+export default function Module3({ theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [quizAnswers, setQuizAnswers] = useState({});
   const [showQuizResults, setShowQuizResults] = useState(false);
@@ -40,14 +49,14 @@ export default function Module1({ theme = 'dark' }) {
     }
   }, []);
 
-  // Refresh AOS when theme or tab changes to handle new elements
+  // Refresh AOS when theme or tab changes
   useEffect(() => {
     if (aosInitialized.current) {
       AOS.refresh();
     }
   }, [theme, activeTab]);
 
-  // Theme-based styles with modern light mode design
+  // Theme-based styles - GREEN accent for financial/accounting module
   const getThemeStyles = () => {
     if (theme === 'light') {
       return {
@@ -59,12 +68,12 @@ export default function Module1({ theme = 'dark' }) {
         border: 'border-white/30',
         hover: 'hover:bg-white',
         inputBg: 'bg-white/90',
-        shadow: 'shadow-2xl shadow-purple-500/10',
-        accent: 'text-purple-600',
-        accentBg: 'bg-purple-50/80',
-        accentBorder: 'border-purple-200/50',
-        accentHover: 'hover:bg-purple-100/80',
-        gradientText: 'bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent',
+        shadow: 'shadow-2xl shadow-emerald-500/10',
+        accent: 'text-emerald-600',
+        accentBg: 'bg-emerald-50/80',
+        accentBorder: 'border-emerald-200/50',
+        accentHover: 'hover:bg-emerald-100/80',
+        gradientText: 'bg-gradient-to-r from-emerald-600 to-emerald-600 bg-clip-text text-transparent',
         transition: 'transition-all duration-300 ease-in-out'
       };
     }
@@ -78,11 +87,11 @@ export default function Module1({ theme = 'dark' }) {
       hover: 'hover:bg-white/10',
       inputBg: 'bg-white/5',
       shadow: 'shadow-xl',
-      accent: 'text-sky-400',
-      accentBg: 'bg-sky-500/20',
-      accentBorder: 'border-sky-400/30',
-      accentHover: 'hover:bg-sky-500/30',
-      gradientText: 'text-sky-400',
+      accent: 'text-emerald-400',
+      accentBg: 'bg-emerald-500/20',
+      accentBorder: 'border-emerald-400/30',
+      accentHover: 'hover:bg-emerald-500/30',
+      gradientText: 'text-emerald-400',
       transition: 'transition-all duration-300 ease-in-out'
     };
   };
@@ -152,207 +161,147 @@ export default function Module1({ theme = 'dark' }) {
   const quizQuestions = [
     {
       id: 1,
-      question: "Which of the following is not a required data item in the Premium Register?",
+      question: "Under IFRS 17, the Liability for Remaining Coverage (LRC) primarily represents:",
       options: [
-        "a) Unique policy identifier",
-        "b) Policy start-date",
-        "c) Gross premium",
-        "d) Claim status"
+        "a) The present value of future claims payments",
+        "b) The insurer's obligation to provide coverage for the unexpired portion of insurance contracts",
+        "c) The total written premium for the financial year",
+        "d) The reinsurance recoverables from cedants"
       ],
-      correctAnswer: "d) Claim status",
-      explanation: "Claim status belongs to claims data, not the Premium Register."
+      correctAnswer: "b) The insurer's obligation to provide coverage for the unexpired portion of insurance contracts",
+      explanation: "LRC represents the obligation to provide coverage for the remaining period of insurance contracts, before claims occur."
     },
     {
       id: 2,
-      question: "The Exposure File is primarily used for the computation of:",
+      question: "The Unearned Premium Reserve (UPR) is calculated as:",
       options: [
-        "a) Loss Ratio",
-        "b) Unearned Premium Reserve (UPR)",
-        "c) Solvency Margin",
-        "d) Incurred But Not Reported (IBNR) claims"
+        "a) Total written premium minus earned premium",
+        "b) Total claims incurred minus claims paid",
+        "c) Earned premium minus acquisition costs",
+        "d) Gross premium minus commissions"
       ],
-      correctAnswer: "b) Unearned Premium Reserve (UPR)",
-      explanation: "The Exposure File contains active in-force policies used in UPR calculations."
+      correctAnswer: "a) Total written premium minus earned premium",
+      explanation: "UPR = Written Premium - Earned Premium. It represents premium allocated to the unexpired risk period."
     },
     {
       id: 3,
-      question: "Paid claims information should cover:",
+      question: "Which method is commonly used to calculate earned premium for proportional recognition?",
       options: [
-        "a) At least 3 years",
-        "b) At least 5 years",
-        "c) At least 6 years",
-        "d) At least 10 years"
+        "a) The 24th method",
+        "b) The 365th method",
+        "c) The discounted cash flow method",
+        "d) The chain ladder method"
       ],
-      correctAnswer: "c) At least 6 years",
-      explanation: "Paid claims must cover a minimum of 6 years to capture historical claims experience."
+      correctAnswer: "b) The 365th method",
+      explanation: "The 365th method (or days-proportional method) allocates premium evenly over the coverage period based on time elapsed."
     },
     {
       id: 4,
-      question: "Which of the following must be confirmed in Paid Claims data?",
+      question: "Deferred Acquisition Costs (DAC) represent:",
       options: [
-        "a) That only settled claims are included",
-        "b) That future claims projections are included",
-        "c) That exposure adjustments are made",
-        "d) That policy endorsements are tracked"
+        "a) Costs incurred to acquire new insurance contracts that are expensed immediately",
+        "b) Costs incurred to acquire new insurance contracts that are capitalized and amortized over the coverage period",
+        "c) Costs of settling claims",
+        "d) Reinsurance commission expenses"
       ],
-      correctAnswer: "a) That only settled claims are included",
-      explanation: "The Paid Claims file should only include fully/partially settled claims."
+      correctAnswer: "b) Costs incurred to acquire new insurance contracts that are capitalized and amortized over the coverage period",
+      explanation: "DAC are incremental costs directly attributable to acquiring insurance contracts, deferred and amortized as coverage is provided."
     },
     {
       id: 5,
-      question: "Outstanding claims are defined as:",
+      question: "If a policy with annual premium of KES 365,000 starts on July 1 and the reporting date is December 31, what is the earned premium?",
       options: [
-        "a) Claims fully settled in the current year",
-        "b) Claims that are reported but not yet paid",
-        "c) Claims denied by reinsurers",
-        "d) Claims that have been written off"
+        "a) KES 182,500",
+        "b) KES 365,000",
+        "c) KES 0",
+        "d) KES 31,000"
       ],
-      correctAnswer: "b) Claims that are reported but not yet paid",
-      explanation: "Outstanding claims = reported but unpaid."
+      correctAnswer: "a) KES 182,500",
+      explanation: "Using 365th method: 184 days elapsed / 365 days × KES 365,000 = KES 182,500."
     },
     {
       id: 6,
-      question: "Which financial statements are required for general insurance valuation?",
+      question: "For the same policy (KES 365,000 annual premium, July 1 start, Dec 31 reporting), what is the UPR?",
       options: [
-        "a) Management accounts only",
-        "b) Audited accounts and management accounts",
-        "c) Trial balance and solvency margin report",
-        "d) Premium register and claims data"
+        "a) KES 182,500",
+        "b) KES 365,000",
+        "c) KES 0",
+        "d) KES 182,500"
       ],
-      correctAnswer: "b) Audited accounts and management accounts",
-      explanation: "Both audited accounts and management accounts are needed for valuation."
+      correctAnswer: "a) KES 182,500",
+      explanation: "UPR = Written Premium - Earned Premium = 365,000 - 182,500 = 182,500."
     },
     {
       id: 7,
-      question: "Which of the following is not a data check type described in the manual?",
+      question: "Which of the following is NOT a component in the LRC roll-forward calculation?",
       options: [
-        "a) Reasonability & Appropriateness",
-        "b) Consistency",
-        "c) Completeness & Accuracy",
-        "d) Predictive Analytics"
+        "a) Opening LRC balance",
+        "b) Premiums received during the period",
+        "c) Insurance revenue recognized",
+        "d) Acquisition costs deferred"
       ],
-      correctAnswer: "d) Predictive Analytics",
-      explanation: "The three checks are reasonability, consistency, and completeness/accuracy."
+      correctAnswer: "b) Premiums received during the period",
+      explanation: "Premiums received is a cash flow item; LRC roll-forward uses insurance revenue and acquisition costs deferred/amortized."
     },
     {
       id: 8,
-      question: "An example of a reasonability check is:",
+      question: "The amortization of DAC should generally match:",
       options: [
-        "a) Checking if policy start-date is after policy end-date",
-        "b) Verifying solvency margins",
-        "c) Comparing premium growth rates to GDP growth",
-        "d) Forecasting next year's claims"
+        "a) The pattern of claims payments",
+        "b) The recognition of insurance revenue (earning of premium)",
+        "c) The payment of commissions to agents",
+        "d) The timing of reinsurance recoveries"
       ],
-      correctAnswer: "a) Checking if policy start-date is after policy end-date",
-      explanation: "Ensuring logical date sequences is a reasonability check."
+      correctAnswer: "b) The recognition of insurance revenue (earning of premium)",
+      explanation: "DAC is amortized in proportion to the recognition of insurance revenue to match costs with related revenues."
     },
     {
       id: 9,
-      question: "Which date sequence is correct according to the checks?",
+      question: "A key objective of IFRS 17 in relation to LRC is to:",
       options: [
-        "a) Claim reporting date → Claim loss-date → Claim payment date",
-        "b) Claim loss-date → Claim reporting date → Claim payment date",
-        "c) Policy end-date → Claim loss-date → Policy start-date",
-        "d) Claim payment date → Claim reporting date → Claim loss-date"
+        "a) Maximize reported profits in early years",
+        "b) Provide transparent information about insurance contract profitability",
+        "c) Minimize tax liabilities through reserve manipulation",
+        "d) Simplify accounting by eliminating all deferrals"
       ],
-      correctAnswer: "b) Claim loss-date → Claim reporting date → Claim payment date",
-      explanation: "A claim must occur, then be reported, then be paid."
+      correctAnswer: "b) Provide transparent information about insurance contract profitability",
+      explanation: "IFRS 17 aims to provide relevant, faithful representation of insurance contracts, including profit emergence patterns."
     },
     {
       id: 10,
-      question: "A movement analysis in Outstanding Claims involves:",
+      question: "Which financial statement is most affected by LRC calculations?",
       options: [
-        "a) Reconciling opening, reported, and paid claims",
-        "b) Checking only paid claims year-to-date",
-        "c) Projecting ultimate claims",
-        "d) Verifying solvency margins"
+        "a) Statement of cash flows",
+        "b) Statement of changes in equity",
+        "c) Statement of financial position (balance sheet)",
+        "d) Notes to financial statements only"
       ],
-      correctAnswer: "a) Reconciling opening, reported, and paid claims",
-      explanation: "Movement analysis ensures reconciliation of outstanding claims."
+      correctAnswer: "c) Statement of financial position (balance sheet)",
+      explanation: "LRC is a liability on the balance sheet; its changes affect insurance revenue in the income statement."
     },
     {
       id: 11,
-      question: "Completeness checks require comparing GI data with:",
+      question: "When calculating UPR using the 365th method, weekends and holidays are:",
       options: [
-        "a) Regulatory capital requirements",
-        "b) The numbers in financial accounts",
-        "c) Competitors' data",
-        "d) Future claims estimates"
+        "a) Counted as full days",
+        "b) Excluded from the calculation",
+        "c) Counted as half-days",
+        "d) Treated as earned premium days only"
       ],
-      correctAnswer: "b) The numbers in financial accounts",
-      explanation: "Completeness is checked by reconciling GI data to accounts."
+      correctAnswer: "a) Counted as full days",
+      explanation: "The 365th method typically uses actual calendar days, including weekends and holidays, unless contract specifies otherwise."
     },
     {
       id: 12,
-      question: "When data errors occur, one valid approach is:",
+      question: "Which of the following would increase the LRC balance?",
       options: [
-        "a) Always deleting the records",
-        "b) Ignoring errors without documentation",
-        "c) Correcting errors with client validation",
-        "d) Creating synthetic claims data"
+        "a) Recognition of insurance revenue",
+        "b) Amortization of DAC",
+        "c) New contracts written during the period",
+        "d) Claims incurred during the period"
       ],
-      correctAnswer: "c) Correcting errors with client validation",
-      explanation: "Corrections must be validated with the client for auditability."
-    },
-    {
-      id: 13,
-      question: "Which factor should not guide how to treat data errors?",
-      options: [
-        "a) Purpose of the data",
-        "b) Volume of data",
-        "c) Number of actuaries in the team",
-        "d) Ability to validate correction"
-      ],
-      correctAnswer: "c) Number of actuaries in the team",
-      explanation: "Staffing is irrelevant; treatment depends on purpose, volume, and validation."
-    },
-    {
-      id: 14,
-      question: "Assumptions made when filling in missing data must:",
-      options: [
-        "a) Be approved by the reinsurer",
-        "b) Be highlighted and reviewed by the Actuarial Manager",
-        "c) Be omitted from reports",
-        "d) Be reported only verbally"
-      ],
-      correctAnswer: "b) Be highlighted and reviewed by the Actuarial Manager",
-      explanation: "All assumptions must be documented and signed off."
-    },
-    {
-      id: 15,
-      question: "Failed data checks and queries should be:",
-      options: [
-        "a) Corrected immediately without client involvement",
-        "b) Summarized and sent to the client for clarification",
-        "c) Ignored if immaterial",
-        "d) Reported only at year-end"
-      ],
-      correctAnswer: "b) Summarized and sent to the client for clarification",
-      explanation: "Queries must be documented and shared with the client."
-    },
-    {
-      id: 16,
-      question: "Summaries per class of business must include:",
-      options: [
-        "a) Claims and premiums by loss year/quarter",
-        "b) Investment income by asset class",
-        "c) Cashflows by product line",
-        "d) Staff expenses by department"
-      ],
-      correctAnswer: "a) Claims and premiums by loss year/quarter",
-      explanation: "Summaries include claims counts/amounts and premium data."
-    },
-    {
-      id: 17,
-      question: "Premium register summaries should present:",
-      options: [
-        "a) Gross and net written premium per underwriting year",
-        "b) Gross incurred claims per loss year",
-        "c) Net solvency position",
-        "d) Policyholder age distribution"
-      ],
-      correctAnswer: "a) Gross and net written premium per underwriting year",
-      explanation: "Premium summaries focus on gross and net premiums."
+      correctAnswer: "c) New contracts written during the period",
+      explanation: "New contracts increase the obligation to provide future coverage, thus increasing LRC (before revenue recognition)."
     }
   ];
 
@@ -385,7 +334,7 @@ export default function Module1({ theme = 'dark' }) {
           className="absolute inset-0 transition-all duration-500"
           style={{
             background: theme === 'light'
-              ? 'linear-gradient(135deg, rgba(77, 98, 190, 0.65) 0%, rgba(148, 64, 232, 0.59) 100%)'
+              ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.65) 0%, rgba(5, 150, 105, 0.59) 100%)'
               : 'rgba(0, 0, 0, 0.3)',
             backdropFilter: theme === 'dark' ? 'blur(4px)' : 'blur(2px)',
           }}
@@ -397,7 +346,7 @@ export default function Module1({ theme = 'dark' }) {
         {/* Module Hero Container */}
         <div
           className={`rounded-[40px] overflow-hidden mb-6 relative ${theme === 'light'
-            ? 'bg-white/95 shadow-2xl shadow-purple-500/10 border border-white/30'
+            ? 'bg-white/95 shadow-2xl shadow-emerald-500/10 border border-white/30'
             : 'bg-black/75 backdrop-blur-xl border border-white/10 shadow-xl'
             } ${styles.transition}`}
           data-aos="fade-up"
@@ -405,32 +354,30 @@ export default function Module1({ theme = 'dark' }) {
           <div className="p-6 md:p-8">
             <div className="flex items-center space-x-4 md:space-x-6">
               <div className={`inline-block p-4 rounded-full ${theme === 'light'
-                ? 'bg-gradient-to-br from-purple-400 to-blue-500'
-                : 'bg-sky-500/30 border border-sky-400/40'
+                ? 'bg-gradient-to-br from-emerald-400 to-emerald-500'
+                : 'bg-emerald-500/30 border border-emerald-400/40'
                 } ${styles.transition} flex-shrink-0`}>
-                <Book className={`w-9 h-9 ${theme === 'light' ? 'text-white' : 'text-sky-300'} ${styles.transition}`} />
+                <DollarSign className={`w-9 h-9 ${theme === 'light' ? 'text-white' : 'text-emerald-300'} ${styles.transition}`} />
               </div>
               <div className="flex-1 min-w-0">
-                <h1 className={`text-2xl md:text-3xl font-bold leading-tight ${theme === 'light'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent bg-origin-padding'
-                  : 'text-sky-400'
+                <h1 className={`text-3xl md:text-4xl font-extrabold leading-tight ${theme === 'light'
+                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-600 bg-clip-text text-transparent bg-origin-padding'
+                  : 'text-emerald-400'
                   } ${styles.transition}`}>
-                  Data Cleaning and Validation
+                  Liability for Remaining Coverage (LRC)
                 </h1>
               </div>
             </div>
 
-            <p className={`text-base leading-relaxed mt-4 md:mt-5 ${styles.textSecondary} ${styles.transition}`}>
-              Learn how to validate, clean, and standardize General Insurance Premium
-              and Claims data. This module equips you with practical techniques to
-              prepare actuarially fit datasets for pricing, reserving, and solvency monitoring.
+            <p className={`text-base md:text-lg leading-relaxed mt-4 md:mt-6 ${styles.textSecondary} ${styles.transition}`}>
+              Master the calculation and analysis of Liability for Remaining Coverage under IFRS 17. This module covers Unearned Premium Reserve (UPR), Earned Premium, Deferred Acquisition Costs (DAC), and the comprehensive LRC roll-forward calculations essential for accurate financial reporting and compliance.
             </p>
           </div>
         </div>
 
         {/* TAB NAVIGATION */}
         <div className="mb-8" data-aos="fade-up">
-          <div className={`border-b ${theme === 'light' ? 'border-purple-200' : 'border-gray-500'} ${styles.transition}`}>
+          <div className={`border-b ${theme === 'light' ? 'border-emerald-200' : 'border-gray-200/20'} ${styles.transition}`}>
             <nav className="flex space-x-8">
               {['overview', 'course', 'assignments', 'quiz'].map((tab) => (
                 <button
@@ -438,11 +385,11 @@ export default function Module1({ theme = 'dark' }) {
                   onClick={() => switchTab(tab)}
                   className={`pb-4 text-sm font-medium border-b-2 transition-all duration-200 ${activeTab === tab
                     ? theme === 'light'
-                      ? 'border-white text-white font-semibold bg-blue-600/20 px-3 py-1 rounded-t-lg'
-                      : 'border-sky-400 text-sky-400 bg-sky-400/10 px-3 py-1 rounded-t-lg'
+                      ? 'border-white text-white font-semibold bg-emerald-600/20 px-3 py-1 rounded-t-lg'
+                      : 'border-emerald-400 text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-t-lg'
                     : theme === 'light'
                       ? 'border-transparent text-white/80 hover:text-white hover:border-white px-1'
-                      : 'border-transparent text-gray-300 hover:text-gray-200 hover:border-gray-300 px-1'
+                      : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300 px-1'
                     } ${styles.transition}`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -457,37 +404,31 @@ export default function Module1({ theme = 'dark' }) {
 
           {activeTab === 'overview' && (
             <div className={`rounded-3xl ${styles.cardBg} backdrop-blur-xl border ${styles.border} ${styles.shadow} p-6 ${styles.transition}`} data-aos="fade-up">
-              <h3 className={`text-lg md:text-xl font-bold ${styles.text} mb-4 relative inline-block`}>
+              <h3 className={`text-xl font-bold ${styles.text} mb-4 relative inline-block`}>
                 Module Objective
                 <span className={`absolute bottom-0 left-0 w-full h-0.5 ${theme === 'light'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600'
-                  : 'bg-gradient-to-r from-sky-400 to-blue-500'
+                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-600'
+                  : 'bg-gradient-to-r from-emerald-400 to-emerald-500'
                   } transform translate-y-1 ${styles.transition}`}></span>
               </h3>
-              <p className={`${styles.textSecondary} mb-6 text-sm md:text-base ${styles.transition}`}>
-                This module aims to equip you with practical skills in validating, cleaning, and standardizing General Insurance Premium
-                and Claims data. By the end of the module, you will be able to:
-
-                <ul className="list-disc pl-5 mt-2 text-sm md:text-base">
-                  <li>Identify and correct data quality issues</li>
-                  <li>Apply consistent data standards</li>
-                  <li>Prepare accurate and reliable GI premium and claims datasets</li>
-                </ul>
-                This will strengthen the integrity of actuarial analysis, enhance financial reporting accuracy, and ensure compliance with regulatory requirements.
+              <p className={`${styles.textSecondary} mb-6 text-sm ${styles.transition}`}>
+                This module aims to equip learners with practical skills in calculating and analyzing the Liability for Remaining Coverage (LRC). By the end of the module, participants will be able to determine Unearned Premium Reserve (UPR), calculate Earned Premium, apply Deferred Acquisition Costs (DAC), and derive the LRC using real insurance data. This will strengthen the accuracy of actuarial valuations, improve the reliability of financial reporting, and support compliance with IFRS 17 requirements.
               </p>
 
-              <h3 className={`text-lg md:text-xl font-bold ${styles.text} mb-4 relative inline-block`}>
+              <h3 className={`text-xl font-bold ${styles.text} mb-4 relative inline-block`}>
                 Learning Outcomes
                 <span className={`absolute bottom-0 left-0 w-full h-0.5 ${theme === 'light'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600'
-                  : 'bg-gradient-to-r from-sky-400 to-blue-500'
+                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-600'
+                  : 'bg-gradient-to-r from-emerald-400 to-emerald-500'
                   } transform translate-y-1 ${styles.transition}`}></span>
               </h3>
-              <ul className={`list-disc pl-5 ${styles.textSecondary} space-y-2 mb-6 text-sm md:text-base ${styles.transition}`}>
-                <li>Identify and correct data inconsistencies in GI Premium and Claims datasets using standard validation and clean-up techniques.</li>
-                <li>Detect and resolve data quality issues such as missing values, duplicates, inconsistencies, and misclassifications across GI datasets.</li>
-                <li>Prepare actuarially fit datasets that can be seamlessly used for pricing, reserving, financial reporting, solvency monitoring, and regulatory submissions</li>
-                <li>Develop and use standardized working templates that improve data quality, reproducibility, and compliance with internal technical procedures.</li>
+              <ul className={`list-disc pl-5 ${styles.textSecondary} space-y-2 mb-6 text-sm ${styles.transition}`}>
+                <li>Understand the purpose and definitions of Unearned Premium Reserve (UPR), Earned Premium, Deferred Acquisition Costs (DAC), and Liability for Remaining Coverage (LRC) under IFRS 17</li>
+                <li>Explain the interrelationship between UPR, Earned Premium, DAC, and LRC in the context of insurance contract liabilities and revenue recognition</li>
+                <li>Apply practical methods, such as the 365th method, to calculate UPR and Earned Premium, and demonstrate how these flow into LRC</li>
+                <li>Calculate unamortized DAC and incorporate it into the roll-forward calculation of LRC balances</li>
+                <li>Perform step-by-step LRC roll-forward calculations using worked examples, linking premium receivables, written premium, earned premium, UPR, and DAC</li>
+                <li>Interpret results to ensure compliance with IFRS 17 and produce financial statements that fairly represent insurance contract liabilities</li>
               </ul>
             </div>
           )}
@@ -495,56 +436,54 @@ export default function Module1({ theme = 'dark' }) {
           {/* Course Content Tab */}
           {activeTab === 'course' && (
             <div data-aos="fade-up">
-              <div className={`${styles.cardBg} backdrop-blur-md rounded-3xl p-6 md:p-8 border ${styles.border} ${styles.transition}`}>
-                <h3 className={`text-lg md:text-xl font-bold ${styles.text} mb-4 ${styles.transition}`}>Course Content</h3>
-                <p className={`${styles.textTertiary} mb-6 text-sm md:text-base ${styles.transition}`}>
-                  This module is guided by a comprehensive PDF manual.
-                  It contains all the instructions, worked examples, and exercises
-                  you need to master <span className={styles.accent}>Data Clean Up</span>.
-                  Download and use it as your primary reference throughout the module.
+              <div className={`${styles.cardBg} backdrop-blur-md rounded-[40px] p-8 border ${styles.border} ${styles.transition}`}>
+                <h3 className={`text-2xl font-bold ${styles.text} mb-4 ${styles.transition}`}>Course Content</h3>
+                <p className={`${styles.textTertiary} mb-6 ${styles.transition}`}>
+                  This module is guided by comprehensive technical documents. They contain all the instructions, worked examples, and exercises you need to master <span className={styles.accent}>Liability for Remaining Coverage (LRC) Analysis</span>. Download and use them as your primary references throughout the module.
                 </p>
 
                 {/* Resource Card */}
-                <div className={`rounded-2xl ${styles.accentBg} border ${styles.accentBorder} p-4 md:p-6 flex items-center justify-between ${styles.accentHover} ${styles.transition}`}>
-                  <div className="flex items-center space-x-3 md:space-x-4">
-                    <div className={`p-3 ${theme === 'light' ? 'bg-blue-200' : 'bg-sky-600/40'} rounded-xl ${styles.transition}`}>
+                <div className={`rounded-[30px] ${styles.accentBg} border ${styles.accentBorder} p-6 flex items-center justify-between ${styles.accentHover} ${styles.transition}`}>
+                  <div className="flex items-center space-x-4">
+                    <div className={`p-4 ${theme === 'light' ? 'bg-emerald-200' : 'bg-emerald-600/40'} rounded-2xl ${styles.transition}`}>
                       📄
                     </div>
                     <div>
-                      <h4 className={`text-base md:text-lg font-semibold ${styles.text} ${styles.transition}`}>Data Clean Up Training Manual</h4>
-                      <p className={`text-xs md:text-sm ${styles.textTertiary} ${styles.transition}`}>KAFS ITP GI Data & Checks - PDF • 14 pages • January 2025</p>
+                      <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>LRC Internal Technical Procedure</h4>
+                      <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>KAFS_Internal Technical Procedures_Liability for Remaining Coverage Analysis_2025.docx • Comprehensive guide</p>
                     </div>
                   </div>
                   <a
-                    href="/Training Modules/Module-1-Data-Clean-Up/Course Content/KAFS-ITP-GI-Data-and-Checks-2025.pdf"
-                    download="KAFS-ITP-GI-Data-and-Checks-2025.pdf"
+                    href="/Training Modules/Module-3-LRC/Course Content/KAFS_Internal Technical Procedures_Liability for Remaining Coverage Analysis_2025.docx"
+                    download="KAFS_Internal Technical Procedures_Liability for Remaining Coverage Analysis_2025.docx"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`px-4 md:px-6 py-2 ${theme === 'light'
-                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl'
-                      : 'bg-sky-500 hover:bg-sky-600'
-                      } rounded-lg text-white transition-all duration-200 flex items-center gap-2 text-sm md:text-base`}
+                    className={`px-6 py-2 ${theme === 'light'
+                      ? 'bg-gradient-to-r from-emerald-600 to-emerald-600 hover:from-emerald-700 hover:to-emerald-700 shadow-lg hover:shadow-xl'
+                      : 'bg-emerald-500 hover:bg-emerald-600'
+                      } rounded-lg text-white transition-all duration-200 flex items-center gap-2`}
                   >
-                    <Download className="w-3 h-3 md:w-4 md:h-4" />
-                    Download PDF
+                    <Download className="w-4 h-4" />
+                    Download DOCX
                   </a>
                 </div>
 
                 {/* Manual Preview Note */}
-                <div className={`mt-4 md:mt-6 p-3 md:p-4 ${styles.inputBg} rounded-lg border ${styles.border} ${styles.transition}`}>
-                  <h5 className={`${styles.text} font-semibold mb-2 text-sm md:text-base ${styles.transition}`}>About This Manual:</h5>
-                  <p className={`${styles.textTertiary} text-xs md:text-sm ${styles.transition}`}>
-                    This PDF contains Kenbright Actuarial and Financial Services Limited's Internal Technical Procedures for General Insurance Data & Checks (Version 1.0, January 2025). It covers:
+                <div className={`mt-6 p-4 ${styles.inputBg} rounded-lg border ${styles.border} ${styles.transition}`}>
+                  <h5 className={`${styles.text} font-semibold mb-2 ${styles.transition}`}>About This Document:</h5>
+                  <p className={`${styles.textTertiary} text-sm ${styles.transition}`}>
+                    This document contains Kenbright Actuarial and Financial Services Limited's Internal Technical Procedures for Liability for Remaining Coverage Analysis. It covers:
                   </p>
-                  <ul className={`list-disc pl-5 mt-2 ${styles.textTertiary} text-xs md:text-sm ${styles.transition}`}>
-                    <li>Data Requirements for GI valuation</li>
-                    <li>Data Quality Checks and Validation Procedures</li>
-                    <li>Data Collection Templates</li>
-                    <li>Approval workflows and sign-off procedures</li>
+                  <ul className={`list-disc pl-5 mt-2 ${styles.textTertiary} text-sm ${styles.transition}`}>
+                    <li>IFRS 17 requirements for LRC calculation</li>
+                    <li>Step-by-step UPR and Earned Premium calculations</li>
+                    <li>DAC amortization methods and principles</li>
+                    <li>Comprehensive LRC roll-forward calculations</li>
+                    <li>Practical examples and implementation guidance</li>
                   </ul>
                 </div>
 
-                <div className={`mt-6 ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'} text-xs md:text-sm italic ${styles.transition}`}>
+                <div className={`mt-8 ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'} text-sm italic ${styles.transition}`}>
                   Supplementary resources will be added here in future updates.
                 </div>
               </div>
@@ -558,8 +497,8 @@ export default function Module1({ theme = 'dark' }) {
                 <>
                   {/* Quiz Header */}
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className={`text-lg md:text-xl font-bold ${styles.text} ${styles.transition}`}>Quiz: Data Requirements & Checks</h3>
-                    <div className={`${styles.textTertiary} text-sm md:text-base ${styles.transition}`}>
+                    <h3 className={`text-xl font-semibold ${styles.text} ${styles.transition}`}>Quiz: Liability for Remaining Coverage (LRC)</h3>
+                    <div className={`${styles.textTertiary} ${styles.transition}`}>
                       Question {currentQuestionIndex + 1} of {quizQuestions.length}
                     </div>
                   </div>
@@ -570,14 +509,14 @@ export default function Module1({ theme = 'dark' }) {
                       className={`h-2 rounded-full transition-all duration-300`}
                       style={{
                         width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
-                        backgroundColor: theme === 'light' ? '#3B82F6' : '#00B7D4' // Changed to match Next button colors
+                        backgroundColor: theme === 'light' ? '#059669' : '#00E5FF'
                       }}
                     />
                   </div>
 
                   {/* Question Card */}
-                  <div className={`${styles.inputBg} rounded-2xl p-4 md:p-6 mb-6 border ${styles.border} ${styles.transition}`}>
-                    <h4 className={`text-base md:text-lg font-medium ${styles.text} mb-4 ${styles.transition}`}>
+                  <div className={`${styles.inputBg} rounded-2xl p-6 mb-6 border ${styles.border} ${styles.transition}`}>
+                    <h4 className={`text-lg font-medium ${styles.text} mb-4 ${styles.transition}`}>
                       {quizQuestions[currentQuestionIndex].question}
                     </h4>
 
@@ -587,8 +526,8 @@ export default function Module1({ theme = 'dark' }) {
                           key={option}
                           className={`flex items-center p-3 rounded-lg cursor-pointer transition-all ${quizAnswers[quizQuestions[currentQuestionIndex].id] === option
                             ? theme === 'light'
-                              ? 'bg-blue-100 border-2 border-blue-500'
-                              : 'bg-sky-500/30 border-2 border-sky-400'
+                              ? 'bg-emerald-100 border-2 border-emerald-500'
+                              : 'bg-emerald-500/30 border-2 border-emerald-400'
                             : theme === 'light'
                               ? 'bg-white border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                               : 'bg-white/5 border-2 border-white/10 hover:bg-white/10 hover:border-white/20'
@@ -602,7 +541,7 @@ export default function Module1({ theme = 'dark' }) {
                             onChange={() => handleAnswerSelect(quizQuestions[currentQuestionIndex].id, option)}
                             className="mr-3 w-4 h-4"
                           />
-                          <span className={`${styles.textSecondary} text-sm md:text-base ${styles.transition}`}>{option}</span>
+                          <span className={`${styles.textSecondary} text-base ${styles.transition}`}>{option}</span>
                         </label>
                       ))}
                     </div>
@@ -613,39 +552,39 @@ export default function Module1({ theme = 'dark' }) {
                     <button
                       onClick={goToPreviousQuestion}
                       disabled={currentQuestionIndex === 0}
-                      className={`px-4 md:px-6 py-3 ${theme === 'light'
+                      className={`px-6 py-3 ${theme === 'light'
                         ? 'bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200'
                         : 'bg-gray-600 hover:bg-gray-700 disabled:bg-gray-800'
                         } disabled:cursor-not-allowed disabled:opacity-50 ${theme === 'light' ? 'text-gray-900' : 'text-white'
-                        } rounded-lg transition flex items-center gap-2 text-sm md:text-base`}
+                        } rounded-lg transition flex items-center gap-2`}
                     >
-                      <ArrowLeft className="w-3 h-3 md:w-4 md:h-4" />
+                      <ArrowLeft className="w-4 h-4" />
                       Previous
                     </button>
 
-                    <div className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} text-xs md:text-sm ${styles.transition}`}>
+                    <div className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} text-sm ${styles.transition}`}>
                       {Object.keys(quizAnswers).length} of {quizQuestions.length} answered
                     </div>
 
                     {currentQuestionIndex < quizQuestions.length - 1 ? (
                       <button
                         onClick={goToNextQuestion}
-                        className={`px-4 md:px-6 py-3 ${theme === 'light'
-                          ? 'bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl'
+                        className={`px-6 py-3 ${theme === 'light'
+                          ? 'bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-xl'
                           : 'bg-[#00B7D4] hover:bg-[#0097B2] shadow-lg hover:shadow-xl'
-                          } text-white rounded-lg transition-all duration-200 flex items-center gap-2 text-sm md:text-base`}
+                          } text-white rounded-lg transition-all duration-200 flex items-center gap-2`}
                       >
                         Next
-                        <ArrowLeft className="w-3 h-3 md:w-4 md:h-4 rotate-180" />
+                        <ArrowLeft className="w-4 h-4 rotate-180" />
                       </button>
                     ) : (
                       <button
                         onClick={submitQuiz}
                         disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
-                        className={`px-6 md:px-8 py-3 ${theme === 'light'
+                        className={`px-8 py-3 ${theme === 'light'
                           ? 'bg-green-600 hover:bg-green-700 disabled:bg-gray-400 shadow-lg hover:shadow-xl'
                           : 'bg-green-600 hover:bg-green-700 disabled:bg-gray-600'
-                          } disabled:cursor-not-allowed disabled:opacity-50 text-white rounded-lg transition-all duration-200 font-semibold text-sm md:text-base`}
+                          } disabled:cursor-not-allowed disabled:opacity-50 text-white rounded-lg transition-all duration-200 font-semibold`}
                       >
                         Submit Quiz
                       </button>
@@ -654,37 +593,37 @@ export default function Module1({ theme = 'dark' }) {
                 </>
               ) : (
                 /* Results View */
-                <div className="space-y-6 md:space-y-8">
+                <div className="space-y-8">
                   {/* Score Card */}
                   <div className={`${theme === 'light'
-                    ? 'bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200'
-                    : 'bg-gradient-to-br from-sky-500/20 to-blue-500/20 border border-sky-400/30'
-                    } rounded-2xl p-6 md:p-8 text-center ${styles.transition}`}>
-                    <Award className={`w-12 h-12 md:w-16 md:h-16 ${theme === 'light' ? 'text-purple-600' : 'text-sky-400'} mx-auto mb-4`} />
-                    <h3 className={`text-xl md:text-2xl font-bold ${styles.text} mb-2`}>Quiz Complete!</h3>
-                    <div className={`text-3xl md:text-5xl font-extrabold ${theme === 'light' ? 'text-purple-600' : 'text-sky-400'} mb-2`}>
+                    ? 'bg-gradient-to-br from-emerald-100 via-emerald-100 to-emerald-100 border border-emerald-200 shadow-xl'
+                    : 'bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 border border-emerald-400/30'
+                    } rounded-2xl p-8 text-center ${styles.transition}`}>
+                    <Award className={`w-16 h-16 ${theme === 'light' ? 'text-emerald-600' : 'text-emerald-400'} mx-auto mb-4 ${styles.transition}`} />
+                    <h3 className={`text-3xl font-bold ${styles.text} mb-2 ${styles.transition}`}>Quiz Complete!</h3>
+                    <div className={`text-5xl font-extrabold ${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-emerald-600 bg-clip-text text-transparent' : 'text-emerald-400'} mb-2 ${styles.transition}`}>
                       {calculateScore().correct}/{calculateScore().total}
                     </div>
-                    <p className={`text-base md:text-lg ${styles.textTertiary} ${styles.transition}`}>
+                    <p className={`text-xl ${styles.textTertiary} ${styles.transition}`}>
                       {calculateScore().correct === calculateScore().total
-                        ? 'Perfect Score! Excellent work!'
+                        ? 'Perfect Score! Excellent mastery of LRC concepts!'
                         : calculateScore().correct >= calculateScore().total * 0.7
-                          ? 'Great job! You passed!'
-                          : 'Keep studying and try again!'}
+                          ? 'Great job! You have a solid understanding of LRC calculations!'
+                          : 'Review the module materials and try again to strengthen your understanding!'}
                     </p>
-                    <div className={`mt-4 ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} text-sm md:text-base ${styles.transition}`}>
+                    <div className={`mt-4 ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} ${styles.transition}`}>
                       Score: {Math.round((calculateScore().correct / calculateScore().total) * 100)}%
                     </div>
                   </div>
 
                   {/* Answer Review */}
                   <div>
-                    <h4 className={`text-lg md:text-xl font-bold ${styles.text} mb-4 md:mb-6 ${styles.transition}`}>Answer Review</h4>
-                    <div className="space-y-4 md:space-y-6">
+                    <h4 className={`text-2xl font-bold ${styles.text} mb-6 ${styles.transition}`}>Answer Review</h4>
+                    <div className="space-y-6">
                       {quizQuestions.map((q, index) => (
                         <div
                           key={q.id}
-                          className={`rounded-xl p-4 md:p-6 border-2 ${isAnswerCorrect(q.id)
+                          className={`rounded-xl p-6 border-2 ${isAnswerCorrect(q.id)
                             ? theme === 'light'
                               ? 'bg-green-50 border-green-400'
                               : 'bg-green-500/10 border-green-400/30'
@@ -694,7 +633,7 @@ export default function Module1({ theme = 'dark' }) {
                             } ${styles.transition}`}
                         >
                           <div className="flex items-start gap-3 mb-4">
-                            <div className={`flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center ${isAnswerCorrect(q.id)
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isAnswerCorrect(q.id)
                               ? theme === 'light'
                                 ? 'bg-green-200 text-green-700'
                                 : 'bg-green-500/30 text-green-400'
@@ -703,20 +642,20 @@ export default function Module1({ theme = 'dark' }) {
                                 : 'bg-red-500/30 text-red-400'
                               } ${styles.transition}`}>
                               {isAnswerCorrect(q.id) ? (
-                                <Check className="w-3 h-3 md:w-4 md:h-4" />
+                                <Check className="w-5 h-5" />
                               ) : (
-                                <span className="text-base md:text-lg font-bold">✗</span>
+                                <span className="text-lg font-bold">✗</span>
                               )}
                             </div>
                             <div className="flex-1">
-                              <h5 className={`text-base md:text-lg font-semibold ${styles.text} mb-3 ${styles.transition}`}>
+                              <h5 className={`text-lg font-semibold ${styles.text} mb-3 ${styles.transition}`}>
                                 Question {index + 1}: {q.question}
                               </h5>
 
                               {!isAnswerCorrect(q.id) && (
                                 <div className={`mb-3 p-3 ${theme === 'light' ? 'bg-red-100' : 'bg-red-500/20'
                                   } rounded-lg ${styles.transition}`}>
-                                  <p className={`text-xs md:text-sm ${theme === 'light' ? 'text-red-800' : 'text-red-300'} ${styles.transition}`}>
+                                  <p className={`text-sm ${theme === 'light' ? 'text-red-800' : 'text-red-300'} ${styles.transition}`}>
                                     <span className="font-semibold">Your answer:</span> {quizAnswers[q.id]}
                                   </p>
                                 </div>
@@ -724,17 +663,17 @@ export default function Module1({ theme = 'dark' }) {
 
                               <div className={`mb-3 p-3 ${theme === 'light' ? 'bg-green-100' : 'bg-green-500/20'
                                 } rounded-lg ${styles.transition}`}>
-                                <p className={`text-xs md:text-sm ${theme === 'light' ? 'text-green-800' : 'text-green-300'} ${styles.transition}`}>
+                                <p className={`text-sm ${theme === 'light' ? 'text-green-800' : 'text-green-300'} ${styles.transition}`}>
                                   <span className="font-semibold">Correct answer:</span> {q.correctAnswer}
                                 </p>
                               </div>
 
-                              <div className={`p-3 md:p-4 ${theme === 'light'
-                                ? 'bg-blue-50 border border-blue-200'
-                                : 'bg-sky-500/10 border border-sky-400/20'
+                              <div className={`p-4 ${theme === 'light'
+                                ? 'bg-emerald-50 border border-emerald-200'
+                                : 'bg-emerald-500/10 border border-emerald-400/20'
                                 } rounded-lg ${styles.transition}`}>
-                                <p className={`${theme === 'light' ? 'text-blue-700' : 'text-sky-300'} font-medium mb-2 text-sm md:text-base ${styles.transition}`}>Explanation:</p>
-                                <p className={`${styles.textSecondary} text-sm md:text-base ${styles.transition}`}>{q.explanation}</p>
+                                <p className={`${theme === 'light' ? 'text-emerald-700' : 'text-emerald-300'} font-medium mb-2 ${styles.transition}`}>Explanation:</p>
+                                <p className={`${styles.textSecondary} ${styles.transition}`}>{q.explanation}</p>
                               </div>
                             </div>
                           </div>
@@ -751,10 +690,10 @@ export default function Module1({ theme = 'dark' }) {
                         setQuizAnswers({});
                         setCurrentQuestionIndex(0);
                       }}
-                      className={`px-6 md:px-8 py-3 ${theme === 'light'
-                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl'
-                        : 'bg-sky-600 hover:bg-sky-700'
-                        } text-white rounded-lg transition-all duration-200 font-semibold text-sm md:text-base`}
+                      className={`px-8 py-3 ${theme === 'light'
+                        ? 'bg-gradient-to-r from-emerald-600 to-emerald-600 hover:from-emerald-700 hover:to-emerald-700 shadow-lg hover:shadow-xl'
+                        : 'bg-emerald-600 hover:bg-emerald-700'
+                        } text-white rounded-lg transition-all duration-200 font-semibold`}
                     >
                       Retake Quiz
                     </button>
@@ -771,95 +710,37 @@ export default function Module1({ theme = 'dark' }) {
 
               {/* Data Files Subsection */}
               <div className="space-y-4">
-                <h4 className={`text-xl font-semibold ${theme === 'light' ? 'text-blue-600' : 'text-blue-400'} flex items-center gap-3 ${styles.transition}`}>
+                <h4 className={`text-xl font-semibold ${theme === 'light' ? 'text-emerald-600' : 'text-emerald-400'} flex items-center gap-3 ${styles.transition}`}>
                   <Database className="w-6 h-6" />
                   Data Files
                 </h4>
                 <p className={`${styles.textTertiary} ${styles.transition}`}>
-                  Download the following datasets to practice your data cleaning and validation skills:
+                  Download the following datasets to practice your LRC calculations:
                 </p>
 
                 <div className="space-y-4">
                   {/* Premium Register Data */}
                   <div className={`rounded-[30px] ${theme === 'light'
-                    ? 'bg-blue-50 border-blue-200 hover:bg-blue-100'
-                    : 'bg-blue-500/20 border-blue-400/30 hover:bg-blue-500/30'
+                    ? 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100'
+                    : 'bg-emerald-500/20 border-emerald-400/30 hover:bg-emerald-500/30'
                     } border p-6 flex items-center justify-between ${styles.transition}`}>
                     <div className="flex items-center space-x-4">
-                      <div className={`p-4 ${theme === 'light' ? 'bg-blue-200' : 'bg-blue-600/40'} rounded-2xl ${styles.transition}`}>
+                      <div className={`p-4 ${theme === 'light' ? 'bg-emerald-200' : 'bg-emerald-600/40'} rounded-2xl ${styles.transition}`}>
                         📊
                       </div>
                       <div>
                         <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Premium Register Data</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • 1,000 records • Sample dataset</p>
+                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Premium Register_31_12_2024.xlsx • Year-end premium data</p>
                       </div>
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Data/premium-register-1000.xlsx',
-                        'premium-register-1000.xlsx'
+                        '/Training Modules/Module-3-LRC/Data/Premium Register_31_12_2024.xlsx',
+                        'Premium Register_31_12_2024.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
-                        ? 'bg-blue-600 hover:bg-blue-700'
-                        : 'bg-blue-500 hover:bg-blue-600'
-                        } rounded-lg text-white transition flex items-center gap-2`}
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
-                    </button>
-                  </div>
-
-                  {/* Paid Claims Data */}
-                  <div className={`rounded-[30px] ${theme === 'light'
-                    ? 'bg-green-50 border-green-200 hover:bg-green-100'
-                    : 'bg-green-500/20 border-green-400/30 hover:bg-green-500/30'
-                    } border p-6 flex items-center justify-between ${styles.transition}`}>
-                    <div className="flex items-center space-x-4">
-                      <div className={`p-4 ${theme === 'light' ? 'bg-green-200' : 'bg-green-600/40'} rounded-2xl ${styles.transition}`}>
-                        📈
-                      </div>
-                      <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Paid Claims Data</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • 5,000 records • Sample dataset</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Data/paid-claims-5000.xlsx',
-                        'paid-claims-5000.xlsx'
-                      )}
-                      className={`px-6 py-2 ${theme === 'light'
-                        ? 'bg-green-600 hover:bg-green-700'
-                        : 'bg-green-500 hover:bg-green-600'
-                        } rounded-lg text-white transition flex items-center gap-2`}
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
-                    </button>
-                  </div>
-
-                  {/* Outstanding Claims Data */}
-                  <div className={`rounded-[30px] ${theme === 'light'
-                    ? 'bg-purple-50 border-purple-200 hover:bg-purple-100'
-                    : 'bg-purple-500/20 border-purple-400/30 hover:bg-purple-500/30'
-                    } border p-6 flex items-center justify-between ${styles.transition}`}>
-                    <div className="flex items-center space-x-4">
-                      <div className={`p-4 ${theme === 'light' ? 'bg-purple-200' : 'bg-purple-600/40'} rounded-2xl ${styles.transition}`}>
-                        📋
-                      </div>
-                      <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Outstanding Claims Data</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • 2,000 records • Sample dataset</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Data/outstanding-claims-2000.xlsx',
-                        'outstanding-claims-2000.xlsx'
-                      )}
-                      className={`px-6 py-2 ${theme === 'light'
-                        ? 'bg-purple-600 hover:bg-purple-700'
-                        : 'bg-purple-500 hover:bg-purple-600'
+                        ? 'bg-emerald-600 hover:bg-emerald-700'
+                        : 'bg-emerald-500 hover:bg-emerald-600'
                         } rounded-lg text-white transition flex items-center gap-2`}
                     >
                       <Download className="w-4 h-4" />
@@ -876,11 +757,11 @@ export default function Module1({ theme = 'dark' }) {
                   Working Files
                 </h4>
                 <p className={`${styles.textTertiary} ${styles.transition}`}>
-                  Download these templates to structure your data cleaning workflow:
+                  Download these templates to structure your LRC calculations:
                 </p>
 
                 <div className="space-y-4">
-                  {/* Claims Data Clean Up Template */}
+                  {/* LRC Analysis Template */}
                   <div className={`rounded-[30px] ${theme === 'light'
                     ? 'bg-orange-50 border-orange-200 hover:bg-orange-100'
                     : 'bg-orange-500/20 border-orange-400/30 hover:bg-orange-500/30'
@@ -890,14 +771,14 @@ export default function Module1({ theme = 'dark' }) {
                         🛠️
                       </div>
                       <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Claims Data Clean Up Template</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • Structured template for claims validation</p>
+                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>LRC Analysis Template</h4>
+                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>LRC_Analysis.xlsx • Comprehensive LRC calculation workbook</p>
                       </div>
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Working Files/Claims-Data-Clean-Up-Template.xlsx',
-                        'Claims-Data-Clean-Up-Template.xlsx'
+                        '/Training Modules/Module-3-LRC/Working Files/LRC_Analysis.xlsx',
+                        'LRC_Analysis.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-orange-600 hover:bg-orange-700'
@@ -909,7 +790,7 @@ export default function Module1({ theme = 'dark' }) {
                     </button>
                   </div>
 
-                  {/* Premium Data Clean Up Template */}
+                  {/* UPR, GEP & DAC Analysis Template */}
                   <div className={`rounded-[30px] ${theme === 'light'
                     ? 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100'
                     : 'bg-yellow-500/20 border-yellow-400/30 hover:bg-yellow-500/30'
@@ -919,14 +800,14 @@ export default function Module1({ theme = 'dark' }) {
                         ⚙️
                       </div>
                       <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Premium Data Clean Up Template</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • Structured template for premium validation</p>
+                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>UPR, GEP & DAC Analysis Template</h4>
+                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>UPR,GEP & DAC_Analysis.xlsx • Component calculations workbook</p>
                       </div>
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Working Files/Premium-Data-Clean-Up-Template.xlsx',
-                        'Premium-Data-Clean-Up-Template.xlsx'
+                        '/Training Modules/Module-3-LRC/Working Files/UPR,GEP & DAC_Analysis.xlsx',
+                        'UPR,GEP & DAC_Analysis.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-yellow-600 hover:bg-yellow-700'

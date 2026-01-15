@@ -18,10 +18,15 @@ import {
   ExternalLink,
   Upload,
   Database,
-  Settings
+  Settings,
+  Calculator,
+  TrendingUp,
+  BarChart,
+  PieChart,
+  Target
 } from "lucide-react";
 
-export default function Module1({ theme = 'dark' }) {
+export default function Module2({ theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [quizAnswers, setQuizAnswers] = useState({});
   const [showQuizResults, setShowQuizResults] = useState(false);
@@ -40,14 +45,14 @@ export default function Module1({ theme = 'dark' }) {
     }
   }, []);
 
-  // Refresh AOS when theme or tab changes to handle new elements
+  // Refresh AOS when theme or tab changes
   useEffect(() => {
     if (aosInitialized.current) {
       AOS.refresh();
     }
   }, [theme, activeTab]);
 
-  // Theme-based styles with modern light mode design
+  // Theme-based styles - matching Module 1's structure but with blue accent
   const getThemeStyles = () => {
     if (theme === 'light') {
       return {
@@ -59,12 +64,12 @@ export default function Module1({ theme = 'dark' }) {
         border: 'border-white/30',
         hover: 'hover:bg-white',
         inputBg: 'bg-white/90',
-        shadow: 'shadow-2xl shadow-purple-500/10',
-        accent: 'text-purple-600',
-        accentBg: 'bg-purple-50/80',
-        accentBorder: 'border-purple-200/50',
-        accentHover: 'hover:bg-purple-100/80',
-        gradientText: 'bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent',
+        shadow: 'shadow-2xl shadow-blue-500/10',
+        accent: 'text-blue-600',
+        accentBg: 'bg-blue-50/80',
+        accentBorder: 'border-blue-200/50',
+        accentHover: 'hover:bg-blue-100/80',
+        gradientText: 'bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent',
         transition: 'transition-all duration-300 ease-in-out'
       };
     }
@@ -78,11 +83,11 @@ export default function Module1({ theme = 'dark' }) {
       hover: 'hover:bg-white/10',
       inputBg: 'bg-white/5',
       shadow: 'shadow-xl',
-      accent: 'text-sky-400',
-      accentBg: 'bg-sky-500/20',
-      accentBorder: 'border-sky-400/30',
-      accentHover: 'hover:bg-sky-500/30',
-      gradientText: 'text-sky-400',
+      accent: 'text-blue-400',
+      accentBg: 'bg-blue-500/20',
+      accentBorder: 'border-blue-400/30',
+      accentHover: 'hover:bg-blue-500/30',
+      gradientText: 'text-blue-400',
       transition: 'transition-all duration-300 ease-in-out'
     };
   };
@@ -152,207 +157,147 @@ export default function Module1({ theme = 'dark' }) {
   const quizQuestions = [
     {
       id: 1,
-      question: "Which of the following is not a required data item in the Premium Register?",
+      question: "Frequency in insurance is best defined as:",
       options: [
-        "a) Unique policy identifier",
-        "b) Policy start-date",
-        "c) Gross premium",
-        "d) Claim status"
+        "a) The probability that a claim will occur within a given period.",
+        "b) The average size of a claim.",
+        "c) The ratio of total claims to premiums.",
+        "d) The maximum possible loss on a policy."
       ],
-      correctAnswer: "d) Claim status",
-      explanation: "Claim status belongs to claims data, not the Premium Register."
+      correctAnswer: "a) The probability that a claim will occur within a given period.",
+      explanation: "Frequency measures how often claims occur relative to exposure, i.e., probability of occurrence."
     },
     {
       id: 2,
-      question: "The Exposure File is primarily used for the computation of:",
+      question: "Severity in insurance refers to:",
       options: [
-        "a) Loss Ratio",
-        "b) Unearned Premium Reserve (UPR)",
-        "c) Solvency Margin",
-        "d) Incurred But Not Reported (IBNR) claims"
+        "a) The number of claims per exposure.",
+        "b) The financial impact of a claim once it occurs.",
+        "c) The probability of claims not occurring.",
+        "d) The distribution of exposures across policies."
       ],
-      correctAnswer: "b) Unearned Premium Reserve (UPR)",
-      explanation: "The Exposure File contains active in-force policies used in UPR calculations."
+      correctAnswer: "b) The financial impact of a claim once it occurs.",
+      explanation: "Severity measures the average claim size when a claim happens."
     },
     {
       id: 3,
-      question: "Paid claims information should cover:",
+      question: "If 2,000 motor policies are written and 80 claims are reported, what is the claim frequency?",
       options: [
-        "a) At least 3 years",
-        "b) At least 5 years",
-        "c) At least 6 years",
-        "d) At least 10 years"
+        "a) 0.2",
+        "b) 0.04",
+        "c) 25",
+        "d) 40%"
       ],
-      correctAnswer: "c) At least 6 years",
-      explanation: "Paid claims must cover a minimum of 6 years to capture historical claims experience."
+      correctAnswer: "b) 0.04",
+      explanation: "Frequency = 80 ÷ 2,000 = 0.04 (4%)."
     },
     {
       id: 4,
-      question: "Which of the following must be confirmed in Paid Claims data?",
+      question: "An insurer reports 100 claims with a total payout of 50,000,000. What is the average severity?",
       options: [
-        "a) That only settled claims are included",
-        "b) That future claims projections are included",
-        "c) That exposure adjustments are made",
-        "d) That policy endorsements are tracked"
+        "a) 500,000",
+        "b) 50,000",
+        "c) 5,000,000",
+        "d) 5,000"
       ],
-      correctAnswer: "a) That only settled claims are included",
-      explanation: "The Paid Claims file should only include fully/partially settled claims."
+      correctAnswer: "a) 500,000",
+      explanation: "Severity = total loss amount ÷ number of claims = 50,000,000 ÷ 100 = 500,000."
     },
     {
       id: 5,
-      question: "Outstanding claims are defined as:",
+      question: "Suppose an insurer has 1,200 claims from 60,000 vehicle-years. If average severity is 300,000, the pure risk cost per vehicle-year is:",
       options: [
-        "a) Claims fully settled in the current year",
-        "b) Claims that are reported but not yet paid",
-        "c) Claims denied by reinsurers",
-        "d) Claims that have been written off"
+        "a) 6,000",
+        "b) 3,000",
+        "c) 12,000",
+        "d) 18,000"
       ],
-      correctAnswer: "b) Claims that are reported but not yet paid",
-      explanation: "Outstanding claims = reported but unpaid."
+      correctAnswer: "a) 6,000",
+      explanation: "Frequency = 1,200 ÷ 60,000 = 0.02. Risk cost = 0.02 × 300,000 = 6,000."
     },
     {
       id: 6,
-      question: "Which financial statements are required for general insurance valuation?",
+      question: "The risk premium is best described as:",
       options: [
-        "a) Management accounts only",
-        "b) Audited accounts and management accounts",
-        "c) Trial balance and solvency margin report",
-        "d) Premium register and claims data"
+        "a) The premium charged after adding profit and expenses.",
+        "b) The expected cost of claims before loadings.",
+        "c) The reinsurance premium ceded to reinsurers.",
+        "d) The difference between earned and written premium."
       ],
-      correctAnswer: "b) Audited accounts and management accounts",
-      explanation: "Both audited accounts and management accounts are needed for valuation."
+      correctAnswer: "b) The expected cost of claims before loadings.",
+      explanation: "Risk premium = pure premium = expected claims cost only, before loadings."
     },
     {
       id: 7,
-      question: "Which of the following is not a data check type described in the manual?",
+      question: "If frequency is 0.02 and average severity is 250,000, the risk premium per policy is:",
       options: [
-        "a) Reasonability & Appropriateness",
-        "b) Consistency",
-        "c) Completeness & Accuracy",
-        "d) Predictive Analytics"
+        "a) 5,000",
+        "b) 25,000",
+        "c) 2,500",
+        "d) 50,000"
       ],
-      correctAnswer: "d) Predictive Analytics",
-      explanation: "The three checks are reasonability, consistency, and completeness/accuracy."
+      correctAnswer: "a) 5,000",
+      explanation: "Risk premium = Frequency × Severity = 0.02 × 250,000 = 5,000."
     },
     {
       id: 8,
-      question: "An example of a reasonability check is:",
+      question: "Which of the following does NOT directly affect risk premium?",
       options: [
-        "a) Checking if policy start-date is after policy end-date",
-        "b) Verifying solvency margins",
-        "c) Comparing premium growth rates to GDP growth",
-        "d) Forecasting next year's claims"
+        "a) Frequency",
+        "b) Severity",
+        "c) Expense loadings",
+        "d) Exposure"
       ],
-      correctAnswer: "a) Checking if policy start-date is after policy end-date",
-      explanation: "Ensuring logical date sequences is a reasonability check."
+      correctAnswer: "c) Expense loadings",
+      explanation: "Expenses are excluded from risk premium; they come in office premium."
     },
     {
       id: 9,
-      question: "Which date sequence is correct according to the checks?",
+      question: "The office premium is obtained by:",
       options: [
-        "a) Claim reporting date → Claim loss-date → Claim payment date",
-        "b) Claim loss-date → Claim reporting date → Claim payment date",
-        "c) Policy end-date → Claim loss-date → Policy start-date",
-        "d) Claim payment date → Claim reporting date → Claim loss-date"
+        "a) Adding risk premium + expenses + commission + profit margin",
+        "b) Subtracting IBNR from gross claims",
+        "c) Multiplying risk premium by loss ratio",
+        "d) Adding UPR to earned premium"
       ],
-      correctAnswer: "b) Claim loss-date → Claim reporting date → Claim payment date",
-      explanation: "A claim must occur, then be reported, then be paid."
+      correctAnswer: "a) Adding risk premium + expenses + commission + profit margin",
+      explanation: "Office premium = risk premium plus loadings for expenses, commissions, and profit."
     },
     {
       id: 10,
-      question: "A movement analysis in Outstanding Claims involves:",
+      question: "An insurer's risk premium for motor policies is 10,000. To achieve a combined ratio of 95%, what office premium should be charged (assuming expenses are 20% and commission are 15% of premium)?",
       options: [
-        "a) Reconciling opening, reported, and paid claims",
-        "b) Checking only paid claims year-to-date",
-        "c) Projecting ultimate claims",
-        "d) Verifying solvency margins"
+        "a) 12,500",
+        "b) 13,158",
+        "c) 10,526",
+        "d) 16,667"
       ],
-      correctAnswer: "a) Reconciling opening, reported, and paid claims",
-      explanation: "Movement analysis ensures reconciliation of outstanding claims."
+      correctAnswer: "d) 16,667",
+      explanation: "Premium = 10,000 ÷ (1 – 0.20 – 0.15 – 0.05) = 16,667."
     },
     {
       id: 11,
-      question: "Completeness checks require comparing GI data with:",
+      question: "Why is profit loading in office premium often expressed as a percentage of risk premium rather than expenses?",
       options: [
-        "a) Regulatory capital requirements",
-        "b) The numbers in financial accounts",
-        "c) Competitors' data",
-        "d) Future claims estimates"
+        "a) To align profitability with claims risk",
+        "b) To simplify solvency reporting",
+        "c) To avoid regulatory scrutiny",
+        "d) To ensure commissions remain constant"
       ],
-      correctAnswer: "b) The numbers in financial accounts",
-      explanation: "Completeness is checked by reconciling GI data to accounts."
+      correctAnswer: "a) To align profitability with claims risk",
+      explanation: "Profit is proportional to claims risk, not expenses."
     },
     {
       id: 12,
-      question: "When data errors occur, one valid approach is:",
+      question: "Which of the following presents the greatest challenge when transitioning from risk premium to office premium?",
       options: [
-        "a) Always deleting the records",
-        "b) Ignoring errors without documentation",
-        "c) Correcting errors with client validation",
-        "d) Creating synthetic claims data"
+        "a) Stability of frequency estimates",
+        "b) Volatility of severity due to inflation",
+        "c) Allocation and forecasting of expenses and commissions",
+        "d) Measuring exposure consistently"
       ],
-      correctAnswer: "c) Correcting errors with client validation",
-      explanation: "Corrections must be validated with the client for auditability."
-    },
-    {
-      id: 13,
-      question: "Which factor should not guide how to treat data errors?",
-      options: [
-        "a) Purpose of the data",
-        "b) Volume of data",
-        "c) Number of actuaries in the team",
-        "d) Ability to validate correction"
-      ],
-      correctAnswer: "c) Number of actuaries in the team",
-      explanation: "Staffing is irrelevant; treatment depends on purpose, volume, and validation."
-    },
-    {
-      id: 14,
-      question: "Assumptions made when filling in missing data must:",
-      options: [
-        "a) Be approved by the reinsurer",
-        "b) Be highlighted and reviewed by the Actuarial Manager",
-        "c) Be omitted from reports",
-        "d) Be reported only verbally"
-      ],
-      correctAnswer: "b) Be highlighted and reviewed by the Actuarial Manager",
-      explanation: "All assumptions must be documented and signed off."
-    },
-    {
-      id: 15,
-      question: "Failed data checks and queries should be:",
-      options: [
-        "a) Corrected immediately without client involvement",
-        "b) Summarized and sent to the client for clarification",
-        "c) Ignored if immaterial",
-        "d) Reported only at year-end"
-      ],
-      correctAnswer: "b) Summarized and sent to the client for clarification",
-      explanation: "Queries must be documented and shared with the client."
-    },
-    {
-      id: 16,
-      question: "Summaries per class of business must include:",
-      options: [
-        "a) Claims and premiums by loss year/quarter",
-        "b) Investment income by asset class",
-        "c) Cashflows by product line",
-        "d) Staff expenses by department"
-      ],
-      correctAnswer: "a) Claims and premiums by loss year/quarter",
-      explanation: "Summaries include claims counts/amounts and premium data."
-    },
-    {
-      id: 17,
-      question: "Premium register summaries should present:",
-      options: [
-        "a) Gross and net written premium per underwriting year",
-        "b) Gross incurred claims per loss year",
-        "c) Net solvency position",
-        "d) Policyholder age distribution"
-      ],
-      correctAnswer: "a) Gross and net written premium per underwriting year",
-      explanation: "Premium summaries focus on gross and net premiums."
+      correctAnswer: "c) Allocation and forecasting of expenses and commissions",
+      explanation: "Expenses and commissions are highly judgmental and can vary significantly."
     }
   ];
 
@@ -385,19 +330,19 @@ export default function Module1({ theme = 'dark' }) {
           className="absolute inset-0 transition-all duration-500"
           style={{
             background: theme === 'light'
-              ? 'linear-gradient(135deg, rgba(77, 98, 190, 0.65) 0%, rgba(148, 64, 232, 0.59) 100%)'
+              ? 'linear-gradient(135deg, rgba(59, 131, 246, 0.52) 0%, rgba(59, 131, 246, 0.53) 100%)'
               : 'rgba(0, 0, 0, 0.3)',
-            backdropFilter: theme === 'dark' ? 'blur(4px)' : 'blur(2px)',
+            backdropFilter: theme === 'dark' ? 'blur(3px)' : 'blur(2px)',
           }}
         />
       </div>
 
       <main className={`relative z-10 max-w-6xl mx-auto px-4 py-8 ${styles.transition}`}>
 
-        {/* Module Hero Container */}
+        {/* Module Hero Container - Matching Module 1 structure */}
         <div
           className={`rounded-[40px] overflow-hidden mb-6 relative ${theme === 'light'
-            ? 'bg-white/95 shadow-2xl shadow-purple-500/10 border border-white/30'
+            ? 'bg-white/95 shadow-2xl shadow-blue-500/10 border border-white/30'
             : 'bg-black/75 backdrop-blur-xl border border-white/10 shadow-xl'
             } ${styles.transition}`}
           data-aos="fade-up"
@@ -405,32 +350,30 @@ export default function Module1({ theme = 'dark' }) {
           <div className="p-6 md:p-8">
             <div className="flex items-center space-x-4 md:space-x-6">
               <div className={`inline-block p-4 rounded-full ${theme === 'light'
-                ? 'bg-gradient-to-br from-purple-400 to-blue-500'
-                : 'bg-sky-500/30 border border-sky-400/40'
+                ? 'bg-gradient-to-br from-blue-400 to-blue-500'
+                : 'bg-blue-500/30 border border-blue-400/40'
                 } ${styles.transition} flex-shrink-0`}>
-                <Book className={`w-9 h-9 ${theme === 'light' ? 'text-white' : 'text-sky-300'} ${styles.transition}`} />
+                <Calculator className={`w-9 h-9 ${theme === 'light' ? 'text-white' : 'text-blue-300'} ${styles.transition}`} />
               </div>
               <div className="flex-1 min-w-0">
                 <h1 className={`text-2xl md:text-3xl font-bold leading-tight ${theme === 'light'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent bg-origin-padding'
-                  : 'text-sky-400'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent bg-origin-padding'
+                  : 'text-blue-400'
                   } ${styles.transition}`}>
-                  Data Cleaning and Validation
+                  Pricing Fundamentals: Frequency & Severity
                 </h1>
               </div>
             </div>
 
             <p className={`text-base leading-relaxed mt-4 md:mt-5 ${styles.textSecondary} ${styles.transition}`}>
-              Learn how to validate, clean, and standardize General Insurance Premium
-              and Claims data. This module equips you with practical techniques to
-              prepare actuarially fit datasets for pricing, reserving, and solvency monitoring.
+              Master the core concepts of frequency and severity for insurance pricing and risk assessment. Learn to quantify risk using exposure measures, calculate premiums, and connect technical analysis with commercial pricing decisions.
             </p>
           </div>
         </div>
 
         {/* TAB NAVIGATION */}
         <div className="mb-8" data-aos="fade-up">
-          <div className={`border-b ${theme === 'light' ? 'border-purple-200' : 'border-gray-500'} ${styles.transition}`}>
+          <div className={`border-b ${theme === 'light' ? 'border-blue-200' : 'border-gray-500'} ${styles.transition}`}>
             <nav className="flex space-x-8">
               {['overview', 'course', 'assignments', 'quiz'].map((tab) => (
                 <button
@@ -439,7 +382,7 @@ export default function Module1({ theme = 'dark' }) {
                   className={`pb-4 text-sm font-medium border-b-2 transition-all duration-200 ${activeTab === tab
                     ? theme === 'light'
                       ? 'border-white text-white font-semibold bg-blue-600/20 px-3 py-1 rounded-t-lg'
-                      : 'border-sky-400 text-sky-400 bg-sky-400/10 px-3 py-1 rounded-t-lg'
+                      : 'border-blue-400 text-blue-400 bg-blue-400/20 px-3 py-1 rounded-t-lg'
                     : theme === 'light'
                       ? 'border-transparent text-white/80 hover:text-white hover:border-white px-1'
                       : 'border-transparent text-gray-300 hover:text-gray-200 hover:border-gray-300 px-1'
@@ -460,34 +403,29 @@ export default function Module1({ theme = 'dark' }) {
               <h3 className={`text-lg md:text-xl font-bold ${styles.text} mb-4 relative inline-block`}>
                 Module Objective
                 <span className={`absolute bottom-0 left-0 w-full h-0.5 ${theme === 'light'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600'
-                  : 'bg-gradient-to-r from-sky-400 to-blue-500'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-600'
+                  : 'bg-gradient-to-r from-blue-400 to-blue-500'
                   } transform translate-y-1 ${styles.transition}`}></span>
               </h3>
               <p className={`${styles.textSecondary} mb-6 text-sm md:text-base ${styles.transition}`}>
-                This module aims to equip you with practical skills in validating, cleaning, and standardizing General Insurance Premium
-                and Claims data. By the end of the module, you will be able to:
-
-                <ul className="list-disc pl-5 mt-2 text-sm md:text-base">
-                  <li>Identify and correct data quality issues</li>
-                  <li>Apply consistent data standards</li>
-                  <li>Prepare accurate and reliable GI premium and claims datasets</li>
-                </ul>
-                This will strengthen the integrity of actuarial analysis, enhance financial reporting accuracy, and ensure compliance with regulatory requirements.
+                This module introduces the core concepts of frequency and severity, which form the basis for pricing, reserving, and risk assessment in insurance. Learners will be introduced to the concepts of frequency, severity, and exposure, and learn how these measures are used to quantify and assess insurance risk. The module also covers the calculation of risk premium and office premium, ensuring learners can connect technical analysis with the commercial realities of premium setting.
+                <br /><br />
+                By the end of the module, participants will be able to apply actuarial techniques to analyze claims data, calculate expected premiums, and evaluate the relationship between exposures, premiums, and loss ratios to support sound pricing decisions.
               </p>
 
               <h3 className={`text-lg md:text-xl font-bold ${styles.text} mb-4 relative inline-block`}>
                 Learning Outcomes
                 <span className={`absolute bottom-0 left-0 w-full h-0.5 ${theme === 'light'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600'
-                  : 'bg-gradient-to-r from-sky-400 to-blue-500'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-600'
+                  : 'bg-gradient-to-r from-blue-400 to-blue-500'
                   } transform translate-y-1 ${styles.transition}`}></span>
               </h3>
               <ul className={`list-disc pl-5 ${styles.textSecondary} space-y-2 mb-6 text-sm md:text-base ${styles.transition}`}>
-                <li>Identify and correct data inconsistencies in GI Premium and Claims datasets using standard validation and clean-up techniques.</li>
-                <li>Detect and resolve data quality issues such as missing values, duplicates, inconsistencies, and misclassifications across GI datasets.</li>
-                <li>Prepare actuarially fit datasets that can be seamlessly used for pricing, reserving, financial reporting, solvency monitoring, and regulatory submissions</li>
-                <li>Develop and use standardized working templates that improve data quality, reproducibility, and compliance with internal technical procedures.</li>
+                <li>Explain the concepts of frequency and severity and their role in measuring insurance risk</li>
+                <li>Calculate and interpret exposures for use in insurance analysis (in days, months, or years)</li>
+                <li>Differentiate between risk premium and office premium and describe how each contributes to premium calculation</li>
+                <li>Apply frequency and severity measures to estimate expected claims and derive risk premiums</li>
+                <li>Assess the relationship between exposures, premiums, and loss ratios to evaluate insurance performance</li>
               </ul>
             </div>
           )}
@@ -498,31 +436,28 @@ export default function Module1({ theme = 'dark' }) {
               <div className={`${styles.cardBg} backdrop-blur-md rounded-3xl p-6 md:p-8 border ${styles.border} ${styles.transition}`}>
                 <h3 className={`text-lg md:text-xl font-bold ${styles.text} mb-4 ${styles.transition}`}>Course Content</h3>
                 <p className={`${styles.textTertiary} mb-6 text-sm md:text-base ${styles.transition}`}>
-                  This module is guided by a comprehensive PDF manual.
-                  It contains all the instructions, worked examples, and exercises
-                  you need to master <span className={styles.accent}>Data Clean Up</span>.
-                  Download and use it as your primary reference throughout the module.
+                  This module is guided by comprehensive technical documents. They contain all the instructions, worked examples, and exercises you need to master <span className={styles.accent}>Frequency & Severity Analysis</span>. Download and use them as your primary references throughout the module.
                 </p>
 
                 {/* Resource Card */}
                 <div className={`rounded-2xl ${styles.accentBg} border ${styles.accentBorder} p-4 md:p-6 flex items-center justify-between ${styles.accentHover} ${styles.transition}`}>
                   <div className="flex items-center space-x-3 md:space-x-4">
-                    <div className={`p-3 ${theme === 'light' ? 'bg-blue-200' : 'bg-sky-600/40'} rounded-xl ${styles.transition}`}>
+                    <div className={`p-3 ${theme === 'light' ? 'bg-blue-200' : 'bg-blue-600/40'} rounded-xl ${styles.transition}`}>
                       📄
                     </div>
                     <div>
-                      <h4 className={`text-base md:text-lg font-semibold ${styles.text} ${styles.transition}`}>Data Clean Up Training Manual</h4>
-                      <p className={`text-xs md:text-sm ${styles.textTertiary} ${styles.transition}`}>KAFS ITP GI Data & Checks - PDF • 14 pages • January 2025</p>
+                      <h4 className={`text-base md:text-lg font-semibold ${styles.text} ${styles.transition}`}>Frequency & Severity Technical Procedure</h4>
+                      <p className={`text-xs md:text-sm ${styles.textTertiary} ${styles.transition}`}>ITP-Frequency-Severity.pdf • Comprehensive guide • January 2025</p>
                     </div>
                   </div>
                   <a
-                    href="/Training Modules/Module-1-Data-Clean-Up/Course Content/KAFS-ITP-GI-Data-and-Checks-2025.pdf"
-                    download="KAFS-ITP-GI-Data-and-Checks-2025.pdf"
+                    href="/Training Modules/Module-2-Pricing/Course Content/ITP-Frequency-Severity.pdf"
+                    download="ITP-Frequency-Severity.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`px-4 md:px-6 py-2 ${theme === 'light'
-                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl'
-                      : 'bg-sky-500 hover:bg-sky-600'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 shadow-lg hover:shadow-xl'
+                      : 'bg-blue-500 hover:bg-blue-600'
                       } rounded-lg text-white transition-all duration-200 flex items-center gap-2 text-sm md:text-base`}
                   >
                     <Download className="w-3 h-3 md:w-4 md:h-4" />
@@ -532,15 +467,15 @@ export default function Module1({ theme = 'dark' }) {
 
                 {/* Manual Preview Note */}
                 <div className={`mt-4 md:mt-6 p-3 md:p-4 ${styles.inputBg} rounded-lg border ${styles.border} ${styles.transition}`}>
-                  <h5 className={`${styles.text} font-semibold mb-2 text-sm md:text-base ${styles.transition}`}>About This Manual:</h5>
+                  <h5 className={`${styles.text} font-semibold mb-2 text-sm md:text-base ${styles.transition}`}>About This Document:</h5>
                   <p className={`${styles.textTertiary} text-xs md:text-sm ${styles.transition}`}>
-                    This PDF contains Kenbright Actuarial and Financial Services Limited's Internal Technical Procedures for General Insurance Data & Checks (Version 1.0, January 2025). It covers:
+                    This PDF contains detailed procedures for frequency and severity analysis. It covers:
                   </p>
                   <ul className={`list-disc pl-5 mt-2 ${styles.textTertiary} text-xs md:text-sm ${styles.transition}`}>
-                    <li>Data Requirements for GI valuation</li>
-                    <li>Data Quality Checks and Validation Procedures</li>
-                    <li>Data Collection Templates</li>
-                    <li>Approval workflows and sign-off procedures</li>
+                    <li>Frequency and severity concepts and calculations</li>
+                    <li>Exposure measures and risk premium derivation</li>
+                    <li>Transition from risk premium to office premium</li>
+                    <li>Practical examples and exercises</li>
                   </ul>
                 </div>
 
@@ -570,7 +505,7 @@ export default function Module1({ theme = 'dark' }) {
                       className={`h-2 rounded-full transition-all duration-300`}
                       style={{
                         width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
-                        backgroundColor: theme === 'light' ? '#3B82F6' : '#00B7D4' // Changed to match Next button colors
+                        backgroundColor: theme === 'light' ? '#2563EB' : '#00E5FF'
                       }}
                     />
                   </div>
@@ -653,16 +588,14 @@ export default function Module1({ theme = 'dark' }) {
                   </div>
                 </>
               ) : (
+
                 /* Results View */
                 <div className="space-y-6 md:space-y-8">
                   {/* Score Card */}
-                  <div className={`${theme === 'light'
-                    ? 'bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200'
-                    : 'bg-gradient-to-br from-sky-500/20 to-blue-500/20 border border-sky-400/30'
-                    } rounded-2xl p-6 md:p-8 text-center ${styles.transition}`}>
-                    <Award className={`w-12 h-12 md:w-16 md:h-16 ${theme === 'light' ? 'text-purple-600' : 'text-sky-400'} mx-auto mb-4`} />
+                  <div className={`${theme === 'light' ? 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200' : 'bg-gradient-to-br from-sky-500/10 to-blue-500/10 border-sky-400/30'} rounded-2xl p-6 md:p-8 text-center border ${styles.transition}`}>
+                    <Award className={`w-12 h-12 md:w-16 md:h-16 ${theme === 'light' ? 'text-blue-600' : 'text-sky-400'} mx-auto mb-4`} />
                     <h3 className={`text-xl md:text-2xl font-bold ${styles.text} mb-2`}>Quiz Complete!</h3>
-                    <div className={`text-3xl md:text-5xl font-extrabold ${theme === 'light' ? 'text-purple-600' : 'text-sky-400'} mb-2`}>
+                    <div className={`text-3xl md:text-5xl font-extrabold ${theme === 'light' ? 'text-blue-600' : 'text-sky-400'} mb-2`}>
                       {calculateScore().correct}/{calculateScore().total}
                     </div>
                     <p className={`text-base md:text-lg ${styles.textTertiary} ${styles.transition}`}>
@@ -764,7 +697,7 @@ export default function Module1({ theme = 'dark' }) {
             </div>
           )}
 
-          {/* ASSIGNMENTS TAB */}
+          {/* ASSIGNMENTS TAB - Matching Module 1 structure */}
           {activeTab === 'assignments' && (
             <div className={`rounded-3xl ${styles.cardBg} backdrop-blur-xl border ${styles.border} p-6 space-y-8 ${styles.transition}`} data-aos="fade-up">
               <h3 className={`text-2xl font-bold ${styles.text} mb-6 ${styles.transition}`}>Assignments</h3>
@@ -776,11 +709,11 @@ export default function Module1({ theme = 'dark' }) {
                   Data Files
                 </h4>
                 <p className={`${styles.textTertiary} ${styles.transition}`}>
-                  Download the following datasets to practice your data cleaning and validation skills:
+                  Download the following datasets to practice your frequency and severity calculations:
                 </p>
 
                 <div className="space-y-4">
-                  {/* Premium Register Data */}
+                  {/* Claims Data */}
                   <div className={`rounded-[30px] ${theme === 'light'
                     ? 'bg-blue-50 border-blue-200 hover:bg-blue-100'
                     : 'bg-blue-500/20 border-blue-400/30 hover:bg-blue-500/30'
@@ -790,14 +723,14 @@ export default function Module1({ theme = 'dark' }) {
                         📊
                       </div>
                       <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Premium Register Data</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • 1,000 records • Sample dataset</p>
+                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Claims Data</h4>
+                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • Historical claims for analysis</p>
                       </div>
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Data/premium-register-1000.xlsx',
-                        'premium-register-1000.xlsx'
+                        '/Training Modules/Module-2-Pricing/Data/ClaimsData.xlsx',
+                        'ClaimsData.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-blue-600 hover:bg-blue-700'
@@ -809,7 +742,7 @@ export default function Module1({ theme = 'dark' }) {
                     </button>
                   </div>
 
-                  {/* Paid Claims Data */}
+                  {/* Premium Data */}
                   <div className={`rounded-[30px] ${theme === 'light'
                     ? 'bg-green-50 border-green-200 hover:bg-green-100'
                     : 'bg-green-500/20 border-green-400/30 hover:bg-green-500/30'
@@ -819,47 +752,18 @@ export default function Module1({ theme = 'dark' }) {
                         📈
                       </div>
                       <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Paid Claims Data</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • 5,000 records • Sample dataset</p>
+                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Premium Data</h4>
+                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • Premium and exposure data</p>
                       </div>
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Data/paid-claims-5000.xlsx',
-                        'paid-claims-5000.xlsx'
+                        '/Training Modules/Module-2-Pricing/Data/PremiumData.xlsx',
+                        'PremiumData.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-green-600 hover:bg-green-700'
                         : 'bg-green-500 hover:bg-green-600'
-                        } rounded-lg text-white transition flex items-center gap-2`}
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
-                    </button>
-                  </div>
-
-                  {/* Outstanding Claims Data */}
-                  <div className={`rounded-[30px] ${theme === 'light'
-                    ? 'bg-purple-50 border-purple-200 hover:bg-purple-100'
-                    : 'bg-purple-500/20 border-purple-400/30 hover:bg-purple-500/30'
-                    } border p-6 flex items-center justify-between ${styles.transition}`}>
-                    <div className="flex items-center space-x-4">
-                      <div className={`p-4 ${theme === 'light' ? 'bg-purple-200' : 'bg-purple-600/40'} rounded-2xl ${styles.transition}`}>
-                        📋
-                      </div>
-                      <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Outstanding Claims Data</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • 2,000 records • Sample dataset</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Data/outstanding-claims-2000.xlsx',
-                        'outstanding-claims-2000.xlsx'
-                      )}
-                      className={`px-6 py-2 ${theme === 'light'
-                        ? 'bg-purple-600 hover:bg-purple-700'
-                        : 'bg-purple-500 hover:bg-purple-600'
                         } rounded-lg text-white transition flex items-center gap-2`}
                     >
                       <Download className="w-4 h-4" />
@@ -876,11 +780,11 @@ export default function Module1({ theme = 'dark' }) {
                   Working Files
                 </h4>
                 <p className={`${styles.textTertiary} ${styles.transition}`}>
-                  Download these templates to structure your data cleaning workflow:
+                  Download these templates to structure your frequency and severity calculations:
                 </p>
 
                 <div className="space-y-4">
-                  {/* Claims Data Clean Up Template */}
+                  {/* Frequency and Severity Template */}
                   <div className={`rounded-[30px] ${theme === 'light'
                     ? 'bg-orange-50 border-orange-200 hover:bg-orange-100'
                     : 'bg-orange-500/20 border-orange-400/30 hover:bg-orange-500/30'
@@ -890,47 +794,18 @@ export default function Module1({ theme = 'dark' }) {
                         🛠️
                       </div>
                       <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Claims Data Clean Up Template</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • Structured template for claims validation</p>
+                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Frequency and Severity Template</h4>
+                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • Structured template for calculations</p>
                       </div>
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Working Files/Claims-Data-Clean-Up-Template.xlsx',
-                        'Claims-Data-Clean-Up-Template.xlsx'
+                        '/Training Modules/Module-2-Pricing/Working Files/Frequency-and-Severity-Template.xlsx',
+                        'Frequency-and-Severity-Template.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-orange-600 hover:bg-orange-700'
                         : 'bg-orange-500 hover:bg-orange-600'
-                        } rounded-lg text-white transition flex items-center gap-2`}
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
-                    </button>
-                  </div>
-
-                  {/* Premium Data Clean Up Template */}
-                  <div className={`rounded-[30px] ${theme === 'light'
-                    ? 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100'
-                    : 'bg-yellow-500/20 border-yellow-400/30 hover:bg-yellow-500/30'
-                    } border p-6 flex items-center justify-between ${styles.transition}`}>
-                    <div className="flex items-center space-x-4">
-                      <div className={`p-4 ${theme === 'light' ? 'bg-yellow-200' : 'bg-yellow-600/40'} rounded-2xl ${styles.transition}`}>
-                        ⚙️
-                      </div>
-                      <div>
-                        <h4 className={`text-lg font-semibold ${styles.text} ${styles.transition}`}>Premium Data Clean Up Template</h4>
-                        <p className={`text-sm ${styles.textTertiary} ${styles.transition}`}>Excel • Structured template for premium validation</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => downloadFile(
-                        '/Training Modules/Module-1-Data-Clean-Up/Working Files/Premium-Data-Clean-Up-Template.xlsx',
-                        'Premium-Data-Clean-Up-Template.xlsx'
-                      )}
-                      className={`px-6 py-2 ${theme === 'light'
-                        ? 'bg-yellow-600 hover:bg-yellow-700'
-                        : 'bg-yellow-500 hover:bg-yellow-600'
                         } rounded-lg text-white transition flex items-center gap-2`}
                     >
                       <Download className="w-4 h-4" />

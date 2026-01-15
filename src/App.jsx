@@ -1,13 +1,15 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 import HomePage from "./HomePage";
+import LandingPage from "./LandingPage";
 import QASReports from "./QASReports";
 import TrainingLinks from "./TrainingLinks";
 import FileSavingFormat from "./FileSavingFormat";
 import Modules from "./Modules";
 import Module1 from "./Module1";
+import Module2 from "./Module2"; // Add this import
 import AuthPage from "./components/Auth/AuthPage";
 import UserProfile from "./components/UserProfile";
 import AdminDashboard from "./components/Admin/AdminDashboard";
@@ -19,16 +21,14 @@ import ThemeToggle from "./components/ThemeToggle";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState('dark'); // Default to dark mode
+  const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
-    // Check if user is logged in on app start
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
 
-    // Check for saved theme preference
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -52,7 +52,6 @@ function App() {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  // Check if user is admin
   const isAdmin = user && user.role === 'admin';
 
   if (loading) {
@@ -67,33 +66,36 @@ function App() {
     <TutorialProvider>
       <Router>
         <div className="min-h-screen bg-var(--bg-primary) text-var(--text-primary) transition-colors duration-300">
-          {/* Theme Toggle - Bottom Left Corner */}
-          {user && <ThemeToggle theme={theme} toggleTheme={toggleTheme} />}
+          {/* Theme Toggle - Bottom Right Corner (visible for everyone now) */}
+          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           
-          {user && <Navbar userProfile={<UserProfile user={user} onLogout={handleLogout} />} />}
+          {/* Navbar with theme prop */}
+          <Navbar user={user} onLogout={handleLogout} theme={theme} />
           
-          {/* REMOVED pt-20 from this wrapper - HomePage handles its own spacing */}
           <Routes>
+            {/* Auth Page with theme prop */}
             <Route 
               path="/auth" 
               element={
-                user ? <Navigate to="/" replace /> : <AuthPage onAuthSuccess={handleAuthSuccess} />
+                user ? <Navigate to="/" replace /> : <AuthPage onAuthSuccess={handleAuthSuccess} theme={theme} />
               } 
             />
-            {/* HomePage - NO padding, hero extends behind navbar */}
+            
+            {/* Home - LandingPage with theme prop if not logged in, HomePage if logged in */}
             <Route 
               path="/" 
               element={
-                user ? <HomePage /> : <Navigate to="/auth" replace />
+                user ? <HomePage theme={theme} /> : <LandingPage theme={theme} />
               } 
             />
-            {/* Other pages - ADD pt-20 wrapper for navbar spacing */}
+            
+            {/* Protected Routes - pass theme to other pages as needed */}
             <Route 
               path="/qas-reports" 
               element={
                 user ? (
                   <div className="pt-20">
-                    <QASReports />
+                    <QASReports theme={theme} />
                   </div>
                 ) : <Navigate to="/auth" replace />
               } 
@@ -103,7 +105,7 @@ function App() {
               element={
                 user ? (
                   <div className="pt-20">
-                    <Modules />
+                    <Modules theme={theme} />
                     <ModulesTutorial />
                   </div>
                 ) : <Navigate to="/auth" replace />
@@ -114,7 +116,7 @@ function App() {
               element={
                 user ? (
                   <div className="pt-20">
-                    <TrainingLinks />
+                    <TrainingLinks theme={theme} />
                   </div>
                 ) : <Navigate to="/auth" replace />
               } 
@@ -124,7 +126,7 @@ function App() {
               element={
                 user ? (
                   <div className="pt-20">
-                    <FileSavingFormat />
+                    <FileSavingFormat theme={theme} />
                   </div>
                 ) : <Navigate to="/auth" replace />
               } 
@@ -134,23 +136,48 @@ function App() {
               element={
                 isAdmin ? (
                   <div className="pt-20">
-                    <AdminDashboard />
+                    <AdminDashboard theme={theme} />
                   </div>
                 ) : <Navigate to="/" replace />
               } 
             />
+            
+            {/* Module Routes */}
             <Route 
               path="/modules/1" 
               element={
                 user ? (
                   <div className="pt-20">
-                    <Module1 />
+                    <Module1 theme={theme} />
                     <Module1Tutorial />
                   </div>
                 ) : <Navigate to="/auth" replace />
               } 
             />
-            <Route path="*" element={<Navigate to={user ? "/" : "/auth"} replace />} />
+            
+            {/* ADD MODULE 2 ROUTE HERE */}
+            <Route 
+              path="/modules/2" 
+              element={
+                user ? (
+                  <div className="pt-20">
+                    <Module2 theme={theme} />
+                  </div>
+                ) : <Navigate to="/auth" replace />
+              } 
+            />
+            
+            <Route 
+              path="/profile" 
+              element={
+                user ? (
+                  <div className="pt-20">
+                    <UserProfile theme={theme} />
+                  </div>
+                ) : <Navigate to="/auth" replace />
+              } 
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </Router>
