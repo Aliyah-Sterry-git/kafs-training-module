@@ -517,7 +517,7 @@ export default function Module1({ theme = 'dark' }) {
                   </div>
                   <a
                     href="/Training Modules/Module-1-Data-Clean-Up/Course Content/KAFS-ITP-GI-Data-and-Checks-2025.pdf"
-                    download="KAFS-ITP-GI-Data-and-Checks-2025.pdf"
+                    download="KAFS ITP GI Data and Checks 2025.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`px-4 md:px-6 py-2 ${theme === 'light'
@@ -570,7 +570,7 @@ export default function Module1({ theme = 'dark' }) {
                       className={`h-2 rounded-full transition-all duration-300`}
                       style={{
                         width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
-                        backgroundColor: theme === 'light' ? '#3B82F6' : '#00B7D4' // Changed to match Next button colors
+                        backgroundColor: theme === 'light' ? '#3B82F6' : '#0eb5cf'
                       }}
                     />
                   </div>
@@ -797,7 +797,7 @@ export default function Module1({ theme = 'dark' }) {
                     <button
                       onClick={() => downloadFile(
                         '/Training Modules/Module-1-Data-Clean-Up/Data/premium-register-1000.xlsx',
-                        'premium-register-1000.xlsx'
+                        'premium register 1000.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-blue-600 hover:bg-blue-700'
@@ -826,7 +826,7 @@ export default function Module1({ theme = 'dark' }) {
                     <button
                       onClick={() => downloadFile(
                         '/Training Modules/Module-1-Data-Clean-Up/Data/paid-claims-5000.xlsx',
-                        'paid-claims-5000.xlsx'
+                        'paid claims 5000.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-green-600 hover:bg-green-700'
@@ -855,7 +855,7 @@ export default function Module1({ theme = 'dark' }) {
                     <button
                       onClick={() => downloadFile(
                         '/Training Modules/Module-1-Data-Clean-Up/Data/outstanding-claims-2000.xlsx',
-                        'outstanding-claims-2000.xlsx'
+                        'outstanding claims 2000.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-purple-600 hover:bg-purple-700'
@@ -897,7 +897,7 @@ export default function Module1({ theme = 'dark' }) {
                     <button
                       onClick={() => downloadFile(
                         '/Training Modules/Module-1-Data-Clean-Up/Working Files/Claims-Data-Clean-Up-Template.xlsx',
-                        'Claims-Data-Clean-Up-Template.xlsx'
+                        'Claims Data Clean Up Template.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-orange-600 hover:bg-orange-700'
@@ -926,10 +926,10 @@ export default function Module1({ theme = 'dark' }) {
                     <button
                       onClick={() => downloadFile(
                         '/Training Modules/Module-1-Data-Clean-Up/Working Files/Premium-Data-Clean-Up-Template.xlsx',
-                        'Premium-Data-Clean-Up-Template.xlsx'
+                        'Premium Data Clean Up Template.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
-                        ? 'bg-yellow-600 hover:bg-yellow-700'
+                        ? 'bg-yellow-500 hover:bg-yellow-600'
                         : 'bg-yellow-500 hover:bg-yellow-600'
                         } rounded-lg text-white transition flex items-center gap-2`}
                     >

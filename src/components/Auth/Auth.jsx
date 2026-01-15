@@ -1,4 +1,4 @@
-// src/components/Auth/AuthPage.jsx
+// src/components/Auth/Auth.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -9,10 +9,15 @@ import {
   EyeOff,
   ArrowRight,
   Sparkles,
-  X
+  X,
+  Chrome,
+  Github,
+  Facebook
 } from "lucide-react";
 
-export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
+import { supabase } from "../../supabaseClient";
+
+export default function Auth({ onAuthSuccess, theme = 'dark' }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const mode = searchParams.get('mode') || 'login';
@@ -21,6 +26,7 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [socialLoading, setSocialLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -34,7 +40,6 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
       cyan: "#00E5FF",
       blue: "#3B82F6",
       purple: "#7C4DFF",
-      // Cyan-blue gradient for dark mode buttons
       gradientStart: "#00E5FF",
       gradientEnd: "#3B82F6",
       card: "#1A1F2E",
@@ -49,7 +54,6 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
       cyan: "#00E5FF",
       blue: "#0066FF",
       purple: "#7C4DFF",
-      // Blue-purple gradient for light mode buttons
       gradientStart: "#0066FF",
       gradientEnd: "#7C4DFF",
       card: "#FFFFFF",
@@ -87,60 +91,155 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
 
   const handleClose = () => navigate('/');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
+  const validateForm = () => {
     if (!formData.email || !formData.password) {
       setError("Please fill in all required fields");
-      setLoading(false);
-      return;
+      return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address");
-      setLoading(false);
-      return;
+      return false;
     }
 
     if (!isLogin) {
       if (!formData.name) {
         setError("Please enter your name");
-        setLoading(false);
-        return;
+        return false;
       }
       if (formData.password !== formData.confirmPassword) {
         setError("Passwords do not match");
-        setLoading(false);
-        return;
+        return false;
       }
       if (formData.password.length < 6) {
         setError("Password must be at least 6 characters");
-        setLoading(false);
-        return;
+        return false;
       }
     }
 
-    setTimeout(() => {
-      const userData = {
-        id: Date.now(),
-        username: formData.name || formData.email.split("@")[0],
-        name: formData.name || formData.email.split("@")[0],
-        email: formData.email,
-        role: formData.email.includes('admin') ? 'admin' : 'user',
-        createdAt: new Date().toISOString()
-      };
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      setLoading(false);
-
-      if (onAuthSuccess) {
-        onAuthSuccess(userData);
-      }
-    }, 1500);
+    return true;
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      let data, error;
+
+      if (isLogin) {
+        // Email/Password Sign In
+        ({ data, error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password
+        }));
+      } else {
+        // Email/Password Sign Up
+        ({ data, error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              full_name: formData.name,
+              username: formData.name.toLowerCase().replace(/\s+/g, '_')
+            },
+            emailRedirectTo: `${window.location.origin}/auth/callback`
+          }
+        }));
+      }
+
+      if (error) throw error;
+
+      // Check if email confirmation is required
+      if (!isLogin && data.user?.identities?.length === 0) {
+        setError("User already exists. Please sign in instead.");
+        setLoading(false);
+        return;
+      }
+
+      if (!isLogin) {
+        // For signup, show success message
+        setError("Registration successful! Please check your email to confirm your account.");
+        setTimeout(() => {
+          navigate(`/auth?mode=login`);
+        }, 2000);
+      } else {
+        // For login, trigger success callback
+        if (onAuthSuccess) {
+          onAuthSuccess(data.user);
+        }
+        navigate("/dashboard");
+      }
+
+    } catch (err) {
+      console.error("Auth error:", err);
+      setError(err.message || "An error occurred during authentication");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider) => {
+    setSocialLoading(true);
+    setError("");
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          }
+        }
+      });
+
+      if (error) throw error;
+      
+      // The user will be redirected to OAuth provider
+      // No need to do anything else here
+
+    } catch (err) {
+      console.error("Social login error:", err);
+      setError(`Failed to sign in with ${provider}: ${err.message}`);
+      setSocialLoading(false);
+    }
+  };
+
+  // Social login providers configuration
+  const socialProviders = [
+    {
+      id: 'google',
+      name: 'Google',
+      icon: Chrome,
+      color: theme === 'dark' ? '#4285F4' : '#DB4437',
+      bgColor: theme === 'dark' ? 'rgba(66, 133, 244, 0.1)' : 'rgba(219, 68, 55, 0.08)',
+      borderColor: theme === 'dark' ? 'rgba(66, 133, 244, 0.3)' : 'rgba(219, 68, 55, 0.2)'
+    },
+    {
+      id: 'github',
+      name: 'GitHub',
+      icon: Github,
+      color: theme === 'dark' ? '#FFFFFF' : '#333333',
+      bgColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(51, 51, 51, 0.08)',
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(51, 51, 51, 0.2)'
+    },
+    {
+      id: 'facebook',
+      name: 'Facebook',
+      icon: Facebook,
+      color: theme === 'dark' ? '#1877F2' : '#1877F2',
+      bgColor: theme === 'dark' ? 'rgba(24, 119, 242, 0.1)' : 'rgba(24, 119, 242, 0.08)',
+      borderColor: theme === 'dark' ? 'rgba(24, 119, 242, 0.3)' : 'rgba(24, 119, 242, 0.2)'
+    }
+  ];
 
   return (
     <>
@@ -164,7 +263,7 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
               ? `1.5px solid ${currentColors.cyan}30`
               : `1.5px solid ${currentColors.purple}20`,
             boxShadow: theme === 'dark'
-              ? `0 8px 32px rgba(0, 221, 255, 0.15)`  // Reduced glow for dark mode
+              ? `0 8px 32px rgba(0, 221, 255, 0.15)`
               : `0 20px 60px rgba(103, 58, 183, 0.15), 0 0 0 1px rgba(103, 58, 183, 0.08)`
           }}
           onClick={(e) => e.stopPropagation()}
@@ -222,6 +321,41 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
                 <span style={{ color: theme === 'dark' ? '#F87171' : '#DC2626' }}>{error}</span>
               </div>
             )}
+
+            {/* Social Login Buttons */}
+            <div className="mb-6">
+              <div className="flex gap-3 mb-4">
+                {socialProviders.map((provider) => (
+                  <button
+                    key={provider.id}
+                    onClick={() => handleSocialLogin(provider.id)}
+                    disabled={socialLoading}
+                    className="flex-1 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    style={{
+                      background: provider.bgColor,
+                      border: `2px solid ${provider.borderColor}`,
+                      color: provider.color
+                    }}
+                  >
+                    <provider.icon className="w-4 h-4" />
+                    <span className="hidden sm:inline">{provider.name}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}></div>
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-2" style={{ 
+                    background: currentColors.card, 
+                    color: currentColors.textSecondary 
+                  }}>
+                    Or continue with email
+                  </span>
+                </div>
+              </div>
+            </div>
 
             {/* Form */}
             <div className="space-y-4">
@@ -351,25 +485,33 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
 
               {isLogin && (
                 <div className="flex justify-end">
-                  <button type="button" className="text-xs transition hover:opacity-70" style={{ color: theme === 'dark' ? currentColors.cyan : currentColors.blue }}>
+                  <button 
+                    type="button" 
+                    className="text-xs transition hover:opacity-70" 
+                    style={{ color: theme === 'dark' ? currentColors.cyan : currentColors.blue }}
+                    onClick={() => {
+                      // You can implement password reset here
+                      setError("Password reset feature coming soon!");
+                    }}
+                  >
                     Forgot password?
                   </button>
                 </div>
               )}
 
-              {/* Submit Button - Cyan/Blue gradient for dark, Blue/Purple for light */}
+              {/* Submit Button */}
               <button
                 onClick={handleSubmit}
                 disabled={loading}
                 className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed mt-6 relative overflow-hidden group"
                 style={{
                   background: theme === 'dark'
-                    ? 'linear-gradient(135deg, #00E5FF, #0093dc)'  // Cyan-blue for dark
-                    : 'linear-gradient(135deg, #0066ffda, rgb(120, 72, 252))', // Blue-purple for light
+                    ? 'linear-gradient(135deg, #00E5FF, #0093dc)'
+                    : 'linear-gradient(135deg, #0066ffda, rgb(120, 72, 252))',
                   boxShadow: theme === 'dark'
                     ? '0 5px 20px rgba(0, 229, 255, 0.4)'
-                    : '0 5px 20px rgba(103, 58, 183, 0.4)', // Purple glow for light
-                   color: theme === 'dark' ? '#fefefe' : 'white'
+                    : '0 5px 20px rgba(103, 58, 183, 0.4)',
+                  color: theme === 'dark' ? '#fefefe' : 'white'
                 }}
               >
                 {/* Subtle shine effect */}
@@ -382,7 +524,7 @@ export default function AuthPage({ onAuthSuccess, theme = 'dark' }) {
                         borderColor: 'rgba(255,255,255,0.3)',
                         borderTopColor: 'white'
                       }} />
-                    <span>{isLogin ? 'Signing in...' : 'Creating...'}</span>
+                    <span>{isLogin ? 'Signing in...' : 'Creating Account...'}</span>
                   </>
                 ) : (
                   <>

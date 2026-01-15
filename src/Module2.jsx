@@ -505,7 +505,7 @@ export default function Module2({ theme = 'dark' }) {
                       className={`h-2 rounded-full transition-all duration-300`}
                       style={{
                         width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`,
-                        backgroundColor: theme === 'light' ? '#2563EB' : '#00E5FF'
+                        backgroundColor: theme === 'light' ? '#3B82F6' : '#0eb5cf'
                       }}
                     />
                   </div>
@@ -729,8 +729,8 @@ export default function Module2({ theme = 'dark' }) {
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-2-Pricing/Data/ClaimsData.xlsx',
-                        'ClaimsData.xlsx'
+                        '/Training Modules/Module-2-Pricing-Fundamentals/Data/Claims-Data.xlsx',
+                        'Claims Data.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-blue-600 hover:bg-blue-700'
@@ -758,8 +758,8 @@ export default function Module2({ theme = 'dark' }) {
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-2-Pricing/Data/PremiumData.xlsx',
-                        'PremiumData.xlsx'
+                        '/Training Modules/Module-2-Pricing-Fundamentals/Data/Premium-Data.xlsx',
+                        'Premium Data.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-green-600 hover:bg-green-700'
@@ -800,8 +800,8 @@ export default function Module2({ theme = 'dark' }) {
                     </div>
                     <button
                       onClick={() => downloadFile(
-                        '/Training Modules/Module-2-Pricing/Working Files/Frequency-and-Severity-Template.xlsx',
-                        'Frequency-and-Severity-Template.xlsx'
+                        '/Training Modules/Module-2-Pricing-Fundamentals/Working File/Frequency-and-Severity-Template.xlsx',
+                        'Frequency and Severity Template.xlsx'
                       )}
                       className={`px-6 py-2 ${theme === 'light'
                         ? 'bg-orange-600 hover:bg-orange-700'

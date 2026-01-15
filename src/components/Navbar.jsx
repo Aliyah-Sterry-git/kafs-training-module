@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom"; 
 import { Home, BookOpen, Gamepad2, Calculator, User, ChevronDown, LogOut, Settings, LayoutDashboard, Menu, X, LogIn, UserPlus } from "lucide-react";
+import { supabase } from "../supabaseClient"; 
 
 export default function Navbar({ user, onLogout, theme = 'dark' }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -110,6 +111,40 @@ export default function Navbar({ user, onLogout, theme = 'dark' }) {
   const toggleMobileMenu = (e) => {
     e.stopPropagation();
     setShowMobileMenu(!showMobileMenu);
+  };
+
+  // UPDATED: Proper logout function with Supabase integration
+  const handleLogout = async () => {
+    try {
+      // Sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // Clear local storage
+      localStorage.removeItem('user');
+      
+      // Call parent logout handler if provided (from App.jsx)
+      if (onLogout) {
+        onLogout();
+      }
+      
+      // Close all open menus
+      setShowMobileMenu(false);
+      setShowProfileMenu(false);
+      setShowResourcesMenu(false);
+      setShowToolsMenu(false);
+      
+      // Navigate to home page
+      navigate('/');
+      
+      // Show success message (optional)
+      console.log('Successfully logged out');
+      
+    } catch (error) {
+      console.error('Error signing out:', error.message);
+      // You could show an error toast/notification here
+      alert('Error signing out: ' + error.message);
+    }
   };
 
   // LOGGED OUT NAVBAR
@@ -425,7 +460,7 @@ export default function Navbar({ user, onLogout, theme = 'dark' }) {
                   {getUserInitials()}
                 </div>
                 <div className="text-left">
-                  <div className="text-sm font-semibold leading-none mb-1" style={{ color: colors.text }}>{user?.username || 'User'}</div>
+                  <div className="text-sm font-semibold leading-none mb-1" style={{ color: colors.text }}>{user?.username || user?.name || 'User'}</div>
                   <div className="text-xs leading-none" style={{ color: colors.primary }}>{user?.role === 'admin' ? 'Admin' : 'Member'}</div>
                 </div>
                 <ChevronDown className={`w-4 h-4 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} style={{ color: colors.text }} />
@@ -448,7 +483,7 @@ export default function Navbar({ user, onLogout, theme = 'dark' }) {
                         {getUserInitials()}
                       </div>
                       <div>
-                        <div className="font-semibold" style={{ color: colors.text }}>{user?.username || 'User'}</div>
+                        <div className="font-semibold" style={{ color: colors.text }}>{user?.username || user?.name || 'User'}</div>
                         <div className="text-xs" style={{ color: colors.textSecondary }}>{user?.email || ''}</div>
                       </div>
                     </div>
@@ -473,7 +508,7 @@ export default function Navbar({ user, onLogout, theme = 'dark' }) {
                   </div>
 
                   <div className="p-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-                    <button onClick={onLogout}
+                    <button onClick={handleLogout}
                       className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm w-full transition-all"
                       style={{ color: colors.text }}
                       onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; e.currentTarget.style.color = '#EF4444'; }}
@@ -523,7 +558,7 @@ export default function Navbar({ user, onLogout, theme = 'dark' }) {
                     {getUserInitials()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-sm truncate" style={{ color: colors.text }}>{user?.username || 'User'}</div>
+                    <div className="font-semibold text-sm truncate" style={{ color: colors.text }}>{user?.username || user?.name || 'User'}</div>
                     <div className="text-xs" style={{ color: colors.primary }}>{user?.role === 'admin' ? 'Admin' : 'Member'}</div>
                   </div>
                 </div>
@@ -694,7 +729,7 @@ export default function Navbar({ user, onLogout, theme = 'dark' }) {
               {/* Logout Button at Bottom */}
               <div className="px-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
                 <button
-                  onClick={() => { onLogout(); setShowMobileMenu(false); }}
+                  onClick={() => { handleLogout(); setShowMobileMenu(false); }}
                   className="flex items-center justify-center gap-3 px-4 py-3 rounded-lg text-sm w-full transition-all font-medium"
                   style={{ 
                     background: 'rgba(239,68,68,0.1)',
