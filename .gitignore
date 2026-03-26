@@ -30,10 +30,3 @@ public/Training Modules/
 *.xlsx
 *.xlsm
 *.mp4
-
-/todo
-.env
-.env.development
-.env.local
-.env.production
-.env.staging
